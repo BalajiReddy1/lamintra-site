@@ -10,10 +10,12 @@ ignored by this one, because it holds competitor assessments, pricing thinking
 and honest notes about what has not been tested. None of that belongs in a
 public repo.
 
-Start with `internal/CLAUDE.md`. It points at the rest:
+Start with `internal/STATE.md`, which is the handoff note for where things
+stand, then `internal/CLAUDE.md` for the working rules. The rest:
 
 | File | What it holds |
 |---|---|
+| `internal/STATE.md` | Where things stand, and the next step. Read first |
 | `internal/CLAUDE.md` | Working rules, commands, and the traps that cost real time |
 | `internal/PRODUCT.md` | Strategy, audience, brand voice |
 | `internal/DESIGN.md` | The visual system and the measurements behind it |

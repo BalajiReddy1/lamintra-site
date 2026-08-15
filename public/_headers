@@ -1,0 +1,36 @@
+# Cloudflare Pages reads this file from the build output and applies it at the
+# edge. It is copied through from public/ untouched, like robots.txt.
+#
+# The rule behind the split below: a filename that changes when its contents
+# change may be cached forever. A filename that stays the same when its contents
+# change may not, however tempting the long max-age looks.
+
+# Astro fingerprints these, so the name IS the version. Safe to keep forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Self-hosted typefaces. Stable names, but a typeface changes roughly never, and
+# a stale one for a day is invisible rather than wrong.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Component renders. NOT fingerprinted: button-dark.png keeps its name when the
+# component changes, so `immutable` here would show a returning visitor last
+# month's component for a year. That is the exact failure this site exists to
+# avoid, so it gets a day, and a week of serving stale while it refetches.
+/img/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# The WebAssembly hero. 3.8MB, so worth caching hard, but the name is stable and
+# it is rebuilt whenever a component changes.
+/live/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+# Everything else, which is the HTML. Always revalidate: these are thirteen
+# small documents and a stale one is a wrong price on the shelf.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
