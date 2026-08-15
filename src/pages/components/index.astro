@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { components, installableCount } from '../../data/registry';
+
+const count = components.length;
+---
+<Base
+  title="Compose Multiplatform components - Lamintra"
+  description="Every Lamintra component for Compose Multiplatform, with its states, parameters and source. Copy-paste, no Gradle dependency."
+  section="Components"
+>
+  <section class="shell section">
+    <div class="section__head">
+      <h1>{count} components.</h1>
+      <p class="section__lede">
+        Each one installs on its own. Every render below is the real registry
+        source, drawn headlessly by the same harness the components are verified
+        in, so what you see is what lands in your project.
+      </p>
+    </div>
+
+    <ul class="index-grid">
+      {components.map((c) => (
+        <li>
+          <a class="component-card" href={`/components/${c.slug}/`}>
+            <span class="component-card__art">
+              <img
+                data-specimen={c.slug}
+                src={`/img/${c.slug}-dark.png`}
+                width={c.renderWidth}
+                height={c.renderHeight}
+                loading="lazy"
+                alt={`The Lamintra ${c.name.toLowerCase()}, rendered from the registry source the CLI installs.`}
+              />
+            </span>
+            <span class="component-card__body">
+              <h3>{c.name}</h3>
+              <code>add {c.slug}</code>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {/* Honest about scope, which PRODUCT.md makes a design principle rather
+        than a nicety: a developer who finds out later feels misled. */}
+    <p class="note">
+      The CLI can install {installableCount}, and every one of them is on this
+      page. Until 2026-08-11 the registry shipped a seventh, <code>glass-sheet</code>,
+      that was not listed here; it has been retired rather than quietly left
+      installable. The <a href="/changelog/">changelog</a> records why.
+    </p>
+  </section>
+</Base>

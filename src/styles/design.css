@@ -1,0 +1,1104 @@
+/* ==========================================================================
+   Lamintra design language, v2.
+
+   Written 2026-08-10, replacing the hand-written public/styles.css for the
+   migrated pages only. That file still serves / and must not be edited here.
+
+   WHAT CHANGED AND WHY. The founder asked for the visual language to be
+   modernised toward the standard other component-library sites set. What is
+   NOT changing is the identity: warm black at hue 82, lime, Archivo. Those are
+   the only two things stopping this page reading as every other developer
+   tool, and a committed identity is not the part worth modernising.
+
+   What IS changing is everything the old page could not do. It was one long
+   marketing page and its token set was sized for exactly that: four surfaces,
+   one text ramp, no scale below 12px worth using. A documentation site needs a
+   sidebar, code blocks, tables, prop lists and popovers to all read as
+   distinct surfaces, and that needs a deeper ramp and a denser type scale.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Colour
+
+   Dark stays the inverted-elevation model DESIGN.md argued for: the page is
+   the floor and every surface lifts off it, so nothing can sink beneath a
+   #040200 that already sits at L 0.089. Light runs the normal way, because a
+   light page has room below it.
+
+   The ramp gained two steps. `--bg-raised` is new and exists for popovers and
+   hover states, which the old page had nowhere to put. Every value is a
+   measured hex, never an oklch() declaration that might clip: DESIGN.md
+   records a declared oklch(0.163 0.028 168) resolving to #02120c, an
+   aggressive green-black nothing like its declaration.
+   -------------------------------------------------------------------------- */
+
+/* Dark is the DEFAULT, not the dark-only case, and that is why this is a
+   :not() rather than [data-theme="dark"]. The attribute is set by the inline
+   script in Base.astro, so scoping the tokens to it meant that with JS off
+   nothing matched and every token resolved to (unset): no page colour, no
+   surfaces, no hairlines, no accent, just the UA's default canvas showing
+   through from <meta name="color-scheme">. Measured 2026-08-11 by removing the
+   attribute and reading the computed values back.
+
+   Light stays opt-in and still wins below on source order, at the same
+   specificity. A no-JS reader who prefers light gets dark rather than their
+   preference; honouring it would need the light palette written a second time
+   inside a media query, and this repo has been bitten every time a value
+   existed twice. With JS the preference is read before first paint. */
+:root:not([data-theme="light"]) {
+  --bg:            #040200;   /* page, and the floor of the ramp */
+  --bg-sunk:       #0D0A05;   /* code blocks, the command bar */
+  --bg-panel:      #14100A;   /* cards, sidebar, prop tables */
+  --bg-raised:     #1E1911;   /* popovers, hover, the active nav item */
+  --bg-well:       #0a0a0b;   /* behind component renders. NOT part of the ramp:
+                                 it matches the components' own dark surface so
+                                 a specimen's edge disappears into its frame.
+                                 It survived the last palette change untouched
+                                 and should survive the next one. */
+
+  --line:          #29251E;   /* dividers */
+  --line-strong:   #45403699; /* interactive borders, inputs */
+
+  --ink:           #F8F5F2;   /* primary text, filled buttons */
+  --ink-muted:     #A6A4A1;   /* body */
+  --ink-faint:     #84827E;   /* labels, captions, table headers */
+
+  --accent:        #C8FF34;   /* state only, never a foreground on the page */
+  --on-accent:     #040200;
+
+  --danger:        #F04438;
+
+  /* Lighting, not decoration: one hue moving only in lightness. #040200 to
+     #14100A gives 16 distinct 8-bit steps, which is the minimum that does not
+     band; #0D0A05 gives 9 and shows visible banding every 88px. */
+  --lift: radial-gradient(ellipse 1400px 900px at 50% -10%, #14100A 0%, #04020000 70%);
+
+  /* Light type on a dark ground reads lighter than it is and needs more room. */
+  --leading-body: 1.65;
+}
+
+:root[data-theme="light"] {
+  --bg:            #F5F8F9;   /* cool near-white at hue 220. The page cannot be
+                                 pure white: the light specimen PNGs render on
+                                 #FFFFFF, so white belongs to the wells. */
+  --bg-sunk:       #E9EEF0;
+  --bg-panel:      #FFFFFF;
+  --bg-raised:     #FFFFFF;
+  --bg-well:       #FFFFFF;
+
+  --line:          #DCE3E6;
+  --line-strong:   #9AA5AA99;
+
+  --ink:           #0B0F11;
+  --ink-muted:     #4A5459;
+  /* #667077 measured 4.74:1 on the page and 4.33:1 on --bg-sunk, and the
+     command bar puts faint text on exactly that surface. Tuned against the
+     DARKEST light surface rather than the page, which is the mirror of the
+     dark scheme's rule, and now clears 4.5 on all three. */
+  --ink-faint:     #5E686F;
+
+  /* Lime is a fill, never a foreground. It measures 1.10:1 as text on this
+     page. Where it has to carry text meaning it darkens to an olive, which is
+     the honest cost of this hue on paper. */
+  --accent:        #57710A;
+  --on-accent:     #FFFFFF;
+
+  --danger:        #C4261A;
+
+  --lift: radial-gradient(ellipse 1400px 900px at 50% -10%, #FFFFFF 0%, #F5F8F900 70%);
+
+  --leading-body: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   2. Type
+
+   One modular scale, ratio 1.25, fluid between 380px and 1400px. The old page
+   was rendering fifteen distinct sizes, nine of them crammed between 11.8 and
+   18px, mostly because code had picked up six different sizes in six places.
+
+   Nothing below 12px. --step--2 IS 12px and is for table headers and legal
+   text, not body. The display ceiling is 6rem: above that the page is shouting
+   rather than designing.
+   -------------------------------------------------------------------------- */
+
+:root {
+  --step--2: clamp(0.75rem,  0.73rem + 0.09vw, 0.8125rem);   /* 12 - 13 */
+  --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);   /* 13 - 14 */
+  --step-0:  clamp(0.9375rem, 0.91rem + 0.13vw, 1rem);       /* 15 - 16 */
+  --step-1:  clamp(1.0625rem, 1.02rem + 0.22vw, 1.25rem);    /* 17 - 20 */
+  --step-2:  clamp(1.25rem,   1.17rem + 0.39vw, 1.5625rem);  /* 20 - 25 */
+  --step-3:  clamp(1.5rem,    1.36rem + 0.68vw, 2rem);       /* 24 - 32 */
+  --step-4:  clamp(1.875rem,  1.63rem + 1.22vw, 2.75rem);    /* 30 - 44 */
+  --step-5:  clamp(2.25rem,   1.76rem + 2.44vw, 4rem);       /* 36 - 64 */
+  --step-6:  clamp(2.75rem,   1.77rem + 4.88vw, 6rem);       /* 44 - 96, ceiling */
+
+  --font-sans: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* -0.03em, inside the -0.04em floor. Anything tighter and the letters touch,
+     which reads as cramped rather than designed. */
+  --track-display: -0.03em;
+  --track-tight:   -0.015em;
+
+  /* ------------------------------------------------------------------------
+     3. Space. 4px grid. Varied deliberately: the tight steps group things,
+     the fluid ones separate sections. A single uniform rhythm is what makes a
+     page read as generated.
+     ------------------------------------------------------------------------ */
+  --space-2xs: 0.25rem;   /*  4 */
+  --space-xs:  0.5rem;    /*  8 */
+  --space-s:   0.75rem;   /* 12 */
+  --space-m:   1rem;      /* 16 */
+  --space-l:   1.5rem;    /* 24 */
+  --space-xl:  2rem;      /* 32 */
+  --space-2xl: 3rem;      /* 48 */
+  --space-3xl: clamp(4rem, 3rem + 5vw, 7rem);   /* between sections */
+
+  /* ------------------------------------------------------------------------
+     4. Radius. Capped at 16px on containers. Further round is the
+     over-rounded tell; 24 and 32 on a card are what generated pages do.
+     Actions are capsules and containers are tight rectangles, which is the
+     product's own silhouette rule applied to the web, and with the logo
+     removed it is one of the two things you would recognise this page by.
+     ------------------------------------------------------------------------ */
+  --r-xs:   4px;
+  --r-s:    8px;
+  --r-m:    12px;
+  --r-l:    16px;
+  --r-full: 999px;
+
+  /* ------------------------------------------------------------------------
+     5. Motion. Four tiers, and every transition names one. Durations used to
+     be five ad-hoc values that nearly matched, two of them outside budget.
+     ------------------------------------------------------------------------ */
+  --dur-press:   160ms;   /* confirming a press was heard: 100-160ms budget */
+  --dur-state:   200ms;   /* a state change becoming legible */
+  --dur-surface: 300ms;   /* a surface or colour settling */
+  --dur-reveal:  700ms;   /* scroll reveal; marketing only, allowed to be slow */
+
+  /* Exponential ease-out. A strong custom curve rather than a built-in, which
+     is what deliberate motion needs. No bounce, no elastic. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ------------------------------------------------------------------------
+     6. Elevation. One shadow, defined rather than diffuse.
+
+     Never a 1px border AND a wide soft shadow on the same element: that pair
+     is the ghost-card tell. A surface separates by its fill and its hairline;
+     the shadow is only for things that genuinely float above the page.
+     ------------------------------------------------------------------------ */
+  --shadow-pop: 0 8px 24px -8px rgb(0 0 0 / 0.55);
+
+  /* Semantic, never arbitrary. A 9999 in this file is a bug. */
+  --z-sticky:  100;
+  --z-overlay: 200;
+  --z-popover: 300;
+  --z-toast:   400;
+}
+
+/* --------------------------------------------------------------------------
+   7. Reset and base
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  color-scheme: dark light;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--lift), var(--bg);
+  background-repeat: no-repeat;
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: var(--track-display);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--step-5); }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-2); letter-spacing: var(--track-tight); }
+h4 { font-size: var(--step-1); letter-spacing: var(--track-tight); font-weight: 600; }
+
+p { margin: 0; text-wrap: pretty; }
+
+/* 65-75ch is the readable band. The old page had a paragraph running 112
+   characters because it sat in a 1fr track that resolved to 772px. */
+p, li { max-width: 72ch; }
+
+a { color: var(--ink); text-decoration-color: var(--line-strong); text-underline-offset: 0.2em; }
+a:hover { text-decoration-color: currentColor; }
+
+code, kbd, pre, samp { font-family: var(--font-mono); font-size: 0.9em; }
+
+img, svg, canvas { display: block; max-width: 100%; }
+
+ul, ol { margin: 0; padding: 0; }
+
+hr { height: 1px; border: 0; background: var(--line); margin: 0; }
+
+/* Accent, not ink. The system's own rule is that ink carries action and accent
+   carries state, and focus is a state. Measured 17.8:1 against the page. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-xs);
+}
+
+/* Never hard-code a colour that sits ON the accent. Both of these carried
+   #fff once, which was safe while the accent was a mid blue and became a
+   1.18:1 failure the instant it went lime. */
+::selection { background: var(--accent); color: var(--on-accent); }
+
+/* --------------------------------------------------------------------------
+   8. Layout primitives
+   -------------------------------------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 0.9rem + 1.8vw, 2.5rem);
+}
+
+.stack > * + * { margin-block-start: var(--flow, var(--space-m)); }
+
+/* Not --space-3xl on both edges. 7rem above and below every section left a
+   120px dead band under the proof strip that read as a gap rather than as
+   rhythm. Sections separate; they do not need to be islands. */
+.section { padding-block: clamp(2.5rem, 1.8rem + 3.5vw, 4.5rem); }
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: var(--space-s);
+  z-index: var(--z-toast);
+  padding: var(--space-s) var(--space-m);
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: var(--r-full);
+  font-weight: 600;
+}
+.skip:focus { left: var(--space-m); }
+
+/* --------------------------------------------------------------------------
+   9. Masthead
+
+   Sticky, because a docs site is a long scroll and the nav is how you move
+   through it. The border appears only once the page has scrolled, so at rest
+   the header sits on the page rather than in a bar.
+   -------------------------------------------------------------------------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--bg);
+  border-block-end: 1px solid transparent;
+  transition: border-color var(--dur-surface) var(--ease);
+}
+.masthead[data-scrolled="true"] { border-block-end-color: var(--line); }
+
+.masthead__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-l);
+  min-height: 60px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: var(--step-0);
+  letter-spacing: var(--track-tight);
+  color: var(--ink);
+  text-decoration: none;
+}
+.wordmark span { color: var(--ink-faint); font-weight: 500; }
+
+.masthead nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-inline-start: auto;
+}
+.masthead nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-s);
+  border-radius: var(--r-full);
+  color: var(--ink-muted);
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease);
+}
+/* A translucent wash of the ink, NOT a surface token.
+   --bg-panel and --bg-raised are warm browns (#14100A, #1E1911). As a page
+   they are right, and as a small pill behind white text at 1440 they read as a
+   muddy brown patch rather than a highlight - the hue is doing something the
+   surrounding black does not, at the one size where it has no room to. Mixing
+   the ink instead keeps the pill exactly the page's own hue and works in both
+   schemes from one declaration. */
+.masthead nav a:hover {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+}
+/* Position, not colour alone: the current page also carries a background, so
+   the state does not depend on hue. */
+.masthead nav a[aria-current="page"] {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 14%, transparent);
+}
+/* The grey flash Android paints on tap is not ours and does not match. */
+.masthead nav a,
+.colophon nav a,
+.scheme button { -webkit-tap-highlight-color: transparent; }
+
+/* --------------------------------------------------------------------------
+   10. The scheme control
+
+   Capsule, because it is an action. Built as a track with a thumb rather than
+   two buttons, which is the same silhouette the segmented component uses, so
+   the site is built in the language it sells.
+   -------------------------------------------------------------------------- */
+
+.scheme {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--bg-panel);
+  border-radius: var(--r-full);
+}
+/* 44, not 38. The track is 44 tall once its padding is counted, but the
+   TARGET is the button, and 38 is what a finger actually gets. The control
+   ends up 50px, which the 60px masthead absorbs. */
+.scheme button {
+  min-height: 44px;
+  padding-inline: var(--space-m);
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--ink-faint);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--dur-state) var(--ease), color var(--dur-state) var(--ease);
+}
+.scheme button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.scheme button:hover[aria-pressed="false"] { color: var(--ink); }
+
+/* The masthead cannot be one row on a phone, and this block is where that is
+   dealt with. Measured at 375px: wordmark 73 + nav 326 + scheme 127 + two 24px
+   gaps needs 574px inside a 333px content box. It does not fit at ANY padding -
+   stripping every nav link to zero padding still leaves 432px of content - so
+   the row has to become two rows rather than get tighter. Until this existed
+   the page scrolled sideways to 595px on a 375px viewport, confirmed in Chrome
+   and Firefox and in a real emulated viewport.
+
+   40rem is where it stops fitting, not a round number chosen first: 574 + 42 of
+   shell padding is 616.
+
+   This sits directly after the rules it overrides rather than with the other
+   breakpoints, because a media query adds no specificity and source order is
+   the only thing deciding. CHECKLIST.md records a narrow-screen override for
+   this exact control that was written 340 lines early and silently did nothing.
+
+   The nav takes `order` so the phone gets the conventional header - brand and
+   scheme on top, navigation under it - while the DOM keeps nav before the
+   scheme control, which is the right reading order for a screen reader. The
+   cost is that Tab goes wordmark, nav, then back up to the scheme control. */
+@media (max-width: 40rem) {
+  .masthead__inner { flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); }
+  .masthead nav {
+    order: 1;
+    flex-basis: 100%;
+    margin-inline-start: 0;
+    /* Spread rather than packed: three links across 333px leaves the targets
+       wider than their text, not narrower. */
+    justify-content: space-between;
+  }
+  .scheme { margin-inline-start: auto; }
+  /* What the attribute in Base.astro was always for, and nothing is lost:
+     the footer carries the same repo as "Source" on every page. */
+  .masthead nav a[data-optional-narrow] { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   11. Footer
+   -------------------------------------------------------------------------- */
+
+.colophon {
+  margin-block-start: var(--space-3xl);
+  border-block-start: 1px solid var(--line);
+  padding-block: var(--space-xl);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+.colophon .shell { display: flex; flex-wrap: wrap; gap: var(--space-m); align-items: center; }
+.colophon nav { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-inline-start: auto; }
+.colophon nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-s);
+  border-radius: var(--r-full);
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+.colophon nav a:hover {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   12. Surfaces
+
+   A panel separates by fill plus hairline. It does not get a shadow as well;
+   that pair is the ghost card. Only .pop floats, and it is the only thing in
+   this file with a shadow.
+   -------------------------------------------------------------------------- */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+}
+.pop {
+  background: var(--bg-raised);
+  border-radius: var(--r-m);
+  box-shadow: var(--shadow-pop);
+}
+
+.well {
+  background: var(--bg-well);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+}
+/* The specimen well is the one place light needs a drawn edge, because 0.023
+   of tonal separation from the page is real but slight. */
+:root[data-theme="light"] .well { border-color: var(--line); }
+
+/* --------------------------------------------------------------------------
+   13. Reduced motion
+
+   Gentler motion, not none. The block here used to carry the copy-pasted
+   `transition-duration: 0.01ms !important` on everything, which also removed
+   every colour and opacity transition on the page: a reader with the setting
+   on lost hover feedback, the copy button's confirmation and the toast fade,
+   none of which move anything and all of which carry meaning. What the setting
+   asks us to drop is movement.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property: opacity, background-color, border-color, color, fill, stroke, box-shadow;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. Hero
+
+   One dominant idea per fold. The command is the primary action, not a "Get
+   started" link: the command IS the product, and it is the thing a visitor
+   copies. Everything else in this block is subordinate to it.
+   -------------------------------------------------------------------------- */
+
+.hero { padding-block: clamp(3rem, 2rem + 6vw, 6rem) var(--space-2xl); }
+
+/* --step-5, not --step-6. At 96px beside the 300px hero render the text column
+   is narrow enough that "that aren't Material." breaks across two lines, which
+   splits the one sentence a visitor is meant to remember after ten seconds.
+   --step-6 stays in the scale for a full-bleed page that has the width for it. */
+.hero h1 {
+  font-size: var(--step-5);
+  max-width: 18ch;
+}
+/* The second line carries the weight and the first sets it up, so they are not
+   the same colour. Contrast does the emphasis here rather than a gradient,
+   which survives greyscale and costs the host nothing. */
+.hero h1 .lead-in { display: block; color: var(--ink-faint); font-weight: 600; }
+
+.hero__lede {
+  margin-block-start: var(--space-l);
+  max-width: 46ch;
+  font-size: var(--step-1);
+  color: var(--ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   15. The command bar
+
+   Capsule, because it is an action. The old page's version is the single most
+   copied element on the site, so it keeps its exact shape.
+   -------------------------------------------------------------------------- */
+
+.command {
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-l);
+  background: var(--bg-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  /* max-content alone is a floor as well as a ceiling: it kept the bar at its
+     400px content width inside a 333px column instead of clamping to it.
+     fit-content is the one value that means both halves of what this needs,
+     hugging the command where there is room and clamping to the column where
+     there is not, so the shape above 40rem does not move.
+
+     NOT `max-width: min(100%, max-content)`, which looks equivalent and is
+     invalid: a CSS math function cannot contain an intrinsic keyword, so the
+     whole declaration is dropped and the bar stretches to fill its column.
+     `CSS.supports('max-width', 'min(100%, max-content)')` returns false. That
+     shipped for one build here and no measurement caught it; reading the
+     screenshot did. */
+  width: fit-content;
+  max-width: 100%;
+}
+.command code {
+  font-size: var(--step--1);
+  color: var(--ink);
+  white-space: nowrap;
+  /* overflow-x has nothing to act on without this: a flex item defaults to
+     min-width:auto and refuses to shrink below its own min-content, so the
+     command pushed the bar wide instead of scrolling inside it. */
+  min-width: 0;
+  overflow-x: auto;
+}
+.command .dim { color: var(--ink-faint); }
+.command button {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding-inline: var(--space-l);
+  border: 0;
+  border-radius: var(--r-full);
+  background: var(--ink);
+  color: var(--bg);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease), background-color var(--dur-state) var(--ease);
+}
+/* 160ms, inside the 100-160ms press budget. The old one sat at 350ms, more
+   than double it, and at that length the scale visibly lags the finger and
+   reads as the interface not having heard the press. */
+.command button:active { transform: scale(0.96); }
+.command button[data-copied="true"] { background: var(--accent); color: var(--on-accent); }
+
+/* The command is the product, and on a phone the capsule clipped it to
+   `java -jar lamintra.jar a` with the rest reachable only by scrolling inside
+   a bar most people will not guess is scrollable. A visitor has to be able to
+   READ the thing they are being asked to run, so below 40rem it wraps.
+
+   Stacking it turns the bar into a rectangle holding a capsule, which is the
+   system's own silhouette rule rather than a new idea, so the radius steps
+   down from --r-full to --r-l. Wrapping is at spaces only: the command has
+   three of them and breaking inside `lamintra.jar` would be worse than
+   scrolling ever was.
+
+   Placed directly after the rules it overrides, not with the other
+   breakpoints, because a media query adds no specificity. */
+@media (max-width: 40rem) {
+  .command {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border-radius: var(--r-l);
+  }
+  .command code {
+    white-space: normal;
+    overflow-x: visible;
+    line-height: 1.5;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   16. Proof strip
+
+   Every claim links to something a sceptic can check. There is no social
+   proof to lean on, so this is what replaces it.
+   -------------------------------------------------------------------------- */
+
+.proof {
+  border-block: 1px solid var(--line);
+  padding-block: var(--space-m);
+}
+.proof ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-xl);
+  list-style: none;
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+.proof li { max-width: none; }
+.proof b { color: var(--ink); font-weight: 600; }
+/* min-height rather than a hidden ::after inset: these wrap, so their height
+   changes with the viewport, and no single inset is correct at both widths.
+   The value that cleared 44 on desktop left them at 23px at 375. */
+.proof a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-height: 44px;
+  color: inherit;
+  text-decoration-color: var(--line-strong);
+}
+.proof a:hover { color: var(--ink); }
+
+/* --------------------------------------------------------------------------
+   17. Component index
+
+   A grid here rather than the old alternating full-width rows. The rows were
+   right for a marketing page arguing for six components; an index whose job is
+   "find the one you need" wants them all in view at once.
+
+   It is not the banned identical-card grid: every cell carries a real render
+   of a different component, and the render is the content rather than an icon
+   above a heading. auto-fit + minmax means no breakpoints.
+   -------------------------------------------------------------------------- */
+
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-m);
+  list-style: none;
+}
+.index-grid li { max-width: none; }
+
+.component-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease);
+}
+.component-card:hover { border-color: var(--line-strong); background: var(--bg-raised); }
+
+/* A FIXED aspect, not a min-height. Every render has its own proportions -
+   the switch is 380x100 and the button is 380x300 - so a min-height let each
+   art pane size itself and the six card titles landed at six different
+   heights. One aspect makes the panes identical, `contain` keeps every render
+   whole inside it, and the titles line up across the row. */
+.component-card__art {
+  position: relative;
+  background: var(--bg-well);
+  border-block-end: 1px solid var(--line);
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+/* Absolutely positioned, and that is not decoration.
+   `height: 100%` against a parent sized by aspect-ratio is a circular
+   dependency the browser breaks by sizing the parent to its CONTENT. Switching
+   to `max-height: 100%` did not fix it either: as a grid item the percentage
+   still failed to resolve, and the one render taller than the box - the button,
+   at 380x300 against a 16:10 pane - kept cropping while the five shorter ones
+   looked fine. Taking the image out of flow gives it a containing block with a
+   definite height, so both maxima resolve and `margin: auto` centres it. */
+.component-card__art img {
+  position: absolute;
+  inset: var(--space-m);
+  margin: auto;
+  width: auto;
+  height: auto;
+  max-width: calc(100% - (2 * var(--space-m)));
+  max-height: calc(100% - (2 * var(--space-m)));
+}
+
+.component-card__body {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  padding: var(--space-s) var(--space-m) var(--space-m);
+  margin-block-start: auto;
+}
+.component-card__body h3 { font-size: var(--step-0); font-weight: 600; }
+.component-card__body code { color: var(--ink-faint); font-size: var(--step--2); margin-inline-start: auto; }
+
+/* --------------------------------------------------------------------------
+   18. Section headings
+   -------------------------------------------------------------------------- */
+
+.section__head { margin-block-end: var(--space-xl); }
+.section__lede {
+  margin-block-start: var(--space-s);
+  max-width: 60ch;
+  color: var(--ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   19. Hero art, and the live hero
+
+   The single most important element on the site: a whole settings screen built
+   from nothing but registry components. A page arguing that components look
+   good, with no components on it, argues against itself.
+
+   The PNG paints immediately and carries the fold. The Compose runtime arrives
+   later, in the background, and crossfades in behind it. Nothing waits on it,
+   which is why there is no loading state anywhere: the static render is not a
+   placeholder, it is the fallback.
+   -------------------------------------------------------------------------- */
+
+.hero__grid {
+  display: grid;
+  /* minmax(0, 1fr) rather than the default implicit track, which is `auto` and
+     therefore floors at the widest item's min-content. The command bar's
+     min-content is 400px, so on a 375px phone the single column resolved to
+     399.5px inside a 333px container and took the whole page sideways to 421.
+     The wide row here is the one that has to scroll, not the page. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+@media (min-width: 60rem) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-3xl); }
+}
+
+.hero__art {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  justify-self: center;
+}
+
+/* 300x500 exactly, because the canvas that replaces this cannot be downscaled
+   without taking its 44dp touch targets to 31px with it. The render is
+   authored at the delivered size. */
+.hero__art img,
+.hero__art .live {
+  grid-area: 1 / 1;
+  width: min(100%, 300px);
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--bg-well);
+}
+.hero__art .live {
+  aspect-ratio: 300 / 500;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-surface) var(--ease);
+}
+.hero__art .live canvas { width: 100%; height: 100%; }
+
+[data-live="ready"] .hero__art .live { opacity: 1; pointer-events: auto; }
+/* The PNG stays in the DOM at zero opacity rather than being removed: it is
+   still the accessible description of what the canvas shows, and a canvas
+   cannot carry alt text.
+
+   pointer-events: none is what makes the live hero clickable at all, and it is
+   not optional. opacity: 0 hides a box from the eye and from nothing else: it
+   still hit-tests, and because opacity below 1 establishes a stacking context
+   while the canvas beside it at opacity 1 does not, the invisible PNG painted
+   ON TOP of the canvas despite coming first in the DOM. Every click, tap and
+   drag on the running demo hit the image instead. Nothing about it looked
+   wrong, which is why it survived: the canvas was visible, animating and
+   correct, and simply never received an event. */
+[data-live="ready"] .hero__art img { opacity: 0; pointer-events: none; }
+.hero__art img { transition: opacity var(--dur-surface) var(--ease); }
+
+.hero__caption {
+  margin-block-start: var(--space-m);
+  max-width: 34ch;
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  text-align: center;
+}
+.hero__caption .live-only { display: none; }
+[data-live="ready"] .hero__caption .static-only { display: none; }
+[data-live="ready"] .hero__caption .live-only { display: inline; }
+
+/* --------------------------------------------------------------------------
+   20. Documentation pages
+
+   The density this whole token layer was widened for. A props table, a file
+   tree and a full source listing all have to read as distinct surfaces on the
+   same page, which the old four-surface ramp could not do.
+   -------------------------------------------------------------------------- */
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-block-end: var(--space-m);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+.crumbs a { color: var(--ink-muted); text-decoration: none; }
+.crumbs a:hover { color: var(--ink); text-decoration: underline; }
+
+.doc-head { margin-block-end: var(--space-2xl); }
+.doc-head h1 { font-size: var(--step-4); }
+.doc-head .command { margin-block-start: var(--space-l); }
+
+.doc-block { margin-block-start: var(--space-2xl); }
+.doc-block h2 {
+  font-size: var(--step-2);
+  padding-block-end: var(--space-s);
+  border-block-end: 1px solid var(--line);
+}
+.doc-note {
+  margin-block: var(--space-s) var(--space-m);
+  max-width: 68ch;
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+.doc-note code, .filetree code, .crumbs code { color: var(--ink-muted); }
+
+.doc-preview {
+  display: grid;
+  place-items: center;
+  padding: var(--space-xl);
+}
+.doc-preview img { width: auto; max-width: 100%; height: auto; }
+
+/* Tables overflow at 375 no matter how they are styled, so the table scrolls
+   inside its own container rather than taking the page with it. */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  background: var(--bg-panel);
+}
+
+.props {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+.props th {
+  position: sticky;
+  top: 0;
+  text-align: start;
+  padding: var(--space-s) var(--space-m);
+  background: var(--bg-raised);
+  border-block-end: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: var(--step--2);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.props td {
+  padding: var(--space-m);
+  border-block-end: 1px solid var(--line);
+  vertical-align: top;
+}
+.props tr:last-child td { border-block-end: 0; }
+.props__name { color: var(--ink); font-weight: 500; }
+.props__doc {
+  display: block;
+  margin-block-start: var(--space-2xs);
+  max-width: 46ch;
+  color: var(--ink-faint);
+  font-size: var(--step--2);
+  line-height: 1.5;
+}
+.props__default { color: var(--ink-muted); white-space: pre-wrap; }
+.props__none { color: var(--ink-faint); }
+.props td code { white-space: nowrap; }
+.props td .props__default { white-space: normal; }
+
+/* Not colour alone: the word is the signal and the fill reinforces it, which
+   is the same rule the components follow for state. */
+.req {
+  display: inline-block;
+  margin-inline-start: var(--space-xs);
+  padding: 1px var(--space-xs);
+  border-radius: var(--r-full);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--step--2);
+  font-weight: 600;
+  vertical-align: 1px;
+}
+
+.filetree {
+  list-style: none;
+  padding: var(--space-m) var(--space-l);
+  background: var(--bg-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  font-size: var(--step--1);
+}
+.filetree li { max-width: none; }
+.filetree li + li { margin-block-start: var(--space-2xs); }
+
+.source {
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  overflow: hidden;
+}
+.source pre {
+  margin: 0;
+  padding: var(--space-l);
+  overflow-x: auto;
+  font-size: var(--step--1);
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+/* Shiki emits BOTH themes as custom properties and picks neither, so the
+   scheme attribute decides. Without this the code block is highlighted for one
+   scheme and unreadable in the other. */
+.source .astro-code,
+.source .astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+:root:not([data-theme="light"]) .source .astro-code,
+:root:not([data-theme="light"]) .source .astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+.note {
+  margin-block-start: var(--space-xl);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   21. Prose and release list
+
+   The only place on the site with real reading matter, so it is the only place
+   that gets a flow rhythm rather than explicit margins per element.
+   -------------------------------------------------------------------------- */
+
+.prose { max-width: 54rem; }
+.prose p + p { margin-block-start: var(--space-m); }
+.prose .doc-block > p { color: var(--ink-muted); }
+.prose b { color: var(--ink); font-weight: 600; }
+.prose .command { margin-block: var(--space-m); }
+.prose .source { margin-block: var(--space-m); }
+.prose code { color: var(--ink); }
+.prose a { color: var(--ink); }
+
+.releases { list-style: none; }
+.release { padding-block: var(--space-m); border-block-end: 1px solid var(--line); }
+.release:last-child { border-block-end: 0; }
+.release__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-s);
+}
+.release__head h3 { font-size: var(--step-0); font-weight: 600; }
+.release__head time {
+  margin-inline-start: auto;
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+}
+.release p {
+  margin-block-start: var(--space-2xs);
+  max-width: 68ch;
+  color: var(--ink-muted);
+  font-size: var(--step--1);
+}
+
+/* Legal row. Quieter than the footer above it and separated by a rule, so it
+   reads as a footnote rather than as a second navigation. */
+.colophon__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-m);
+  margin-block-start: var(--space-m);
+  padding-block-start: var(--space-m);
+  border-block-start: 1px solid var(--line);
+}
+.colophon__legal nav { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: 0; }
+.colophon__legal p { margin-inline-start: auto; font-size: var(--step--2); }
+.prose h3 {
+  margin-block-start: var(--space-l);
+  font-size: var(--step-1);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   22. Ownership pair and the FAQ
+
+   Two panels, not three identical columns. The claim has exactly two sides -
+   what a dependency costs and what you get instead - so a third would be
+   padding, and an icon above each heading would be template.
+   -------------------------------------------------------------------------- */
+
+.own-grid {
+  display: grid;
+  gap: var(--space-m);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+.own-card { padding: var(--space-l); }
+.own-card h3 { font-size: var(--step-1); font-weight: 600; }
+.own-card p { margin-block-start: var(--space-s); color: var(--ink-muted); }
+
+.hero__secondary {
+  margin-block-start: var(--space-m);
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+}
+.hero__secondary a { color: var(--ink-muted); }
+
+/* <details> rather than a JS accordion: it opens with JavaScript disabled, it
+   is keyboard operable for free, and find-in-page reaches the closed answers. */
+.faq {
+  border-block-end: 1px solid var(--line);
+}
+.faq summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  min-height: 56px;
+  padding-block: var(--space-s);
+  color: var(--ink);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--track-tight);
+  cursor: pointer;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+/* The marker is drawn rather than typographic, so it cannot pick up a font's
+   idea of what a triangle is. */
+.faq summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--ink-faint);
+  border-bottom: 2px solid var(--ink-faint);
+  transform: rotate(-45deg);
+  transition: transform var(--dur-state) var(--ease);
+}
+.faq[open] summary::before { transform: rotate(45deg); }
+.faq summary:hover::before { border-color: var(--ink); }
+.faq > div { padding-block: 0 var(--space-m); }
+.faq p { max-width: 68ch; color: var(--ink-muted); }

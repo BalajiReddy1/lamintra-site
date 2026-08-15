@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Self-hosted typefaces.
+
+   These were loaded from fonts.googleapis.com until 2026-08-11. Requesting a
+   file from Google's server necessarily discloses the visitor's IP address to
+   Google before they have interacted with anything, and a German court has
+   held that arrangement to be processing personal data without a lawful
+   basis. Serving the files from this origin removes the third party outright.
+
+   It is also faster. The old path cost two preconnects, a DNS lookup, a TLS
+   handshake and a CSS round-trip on a third-party origin before a single glyph
+   could start downloading. These are four files on the same connection the
+   page already has.
+
+   VARIABLE fonts, so one file per subset covers every weight: Archivo carries
+   400 to 700 and JetBrains Mono 400 to 500, which is the full range this site
+   uses. Latin and latin-ext only - cyrillic, greek and vietnamese were dropped
+   because nothing here sets them, and they were 5 of the 9 faces Google served.
+
+   Regenerate by refetching the css2 URL with a browser user-agent, keeping the
+   latin and latin-ext blocks, and rewriting each src to /fonts/.
+   ========================================================================== */
+
+/* Archivo, latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(/fonts/archivo-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Archivo, latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(/fonts/archivo-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* JetBrains Mono, latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* JetBrains Mono, latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}

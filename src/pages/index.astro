@@ -1,0 +1,271 @@
+---
+import Base from '../layouts/Base.astro';
+import { components, installableCount } from '../data/registry';
+import { faqs, faqSchema } from '../data/faq';
+import { currentCli, pinnedRegistry, jarCommand } from '../data/releases';
+
+const count = components.length;
+const installCommand = jarCommand('add button');
+
+/**
+ * Two blocks: what the software is, and the questions. The FAQ half is built
+ * from the same strings the page renders below, so the marked-up text and the
+ * visible text cannot diverge - which is the violation the old page shipped.
+ */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Lamintra',
+    applicationCategory: 'DeveloperApplication',
+    description:
+      'A copy-paste UI component registry for Compose Multiplatform. A CLI copies a component into your project and rewrites its Kotlin package to match its destination, so the file compiles where it lands. No Gradle dependency and no runtime.',
+    operatingSystem: 'Android, iOS, macOS, Windows, Linux, Web',
+    softwareVersion: currentCli.replace('v', ''),
+    codeRepository: 'https://github.com/BalajiReddy1/lamintra',
+    license: 'https://github.com/BalajiReddy1/lamintra/blob/master/LICENSE',
+    softwareRequirements: 'JDK 17 or later',
+    programmingLanguage: 'Kotlin',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  faqSchema(),
+];
+---
+<Base
+  {/* Keyword first, and no brand suffix at all. "Lamintra" is a coined name
+      nobody searches for yet, so leading with it spent the most valuable
+      characters in the result on a word with no demand behind it; appending it
+      pushed the title to 64 characters, past what Google renders, for a word
+      it already shows above the title on its own from og:site_name. 52 now,
+      and the keyword is the first three words. The description was 182
+      characters and Google truncates around 160, which cut it mid-clause. */}
+  title="Compose Multiplatform components that aren't Material"
+  description="Copy-paste UI components for Compose Multiplatform. One command installs a component into your Kotlin project, package rewritten to match. No Gradle dependency."
+  schema={schema}
+>
+  <section class="shell hero">
+    <div class="hero__grid">
+      <div>
+        {/* The {' '} is load-bearing. .lead-in is display:block so the line
+            breaks either way, but without it h1.textContent reads
+            "Compose componentsthat aren't Material." - which is what a
+            copy-paste, a text extractor and a search engine building a snippet
+            all get from the most important string on the site. */}
+        <h1>
+          <span class="lead-in">Compose components</span>{' '}
+          that aren't Material.
+        </h1>
+        <p class="hero__lede">
+          And aren't a dependency. One command copies a component into your
+          Kotlin Multiplatform project with its package rewritten to match, so
+          it compiles where it lands.
+        </p>
+
+        <div class="command" style="margin-block-start: var(--space-xl)">
+          <code><span class="dim">$</span>&nbsp;{installCommand}</code>
+          {/* The class is how Plausible's tagged-events build records a custom
+              event, with no JS of ours. This is the primary CTA and the only
+              conversion on the site: nothing else here is worth measuring. */}
+          <button type="button" class="plausible-event-name=Copy+command" data-copy={installCommand}>Copy</button>
+        </div>
+
+        {/* /install/ had no in-content link anywhere on the site, only the
+            nav item, despite being the page this one is trying to send people
+            to. The command above needs `init` to have been run once, so the
+            link is what the sentence was already missing. */}
+        <p class="hero__secondary">
+          Android, iOS, desktop and web from one file.{' '}
+          <a href="/components/">See the {count} components</a>, or{' '}
+          <a href="/install/">set the project up first</a>.
+        </p>
+      </div>
+
+      <figure class="hero__art" style="margin: 0">
+        <img
+          data-specimen="hero"
+          src="/img/hero-dark.png"
+          width="300"
+          height="500"
+          fetchpriority="high"
+          alt="A settings screen built entirely from Lamintra components: a text field, a segmented control, a card of list rows with a lime switch turned on, and a solid primary button."
+        />
+        <div class="live" id="composeTarget" aria-hidden="true"></div>
+        <figcaption class="hero__caption">
+          <span class="static-only">Every pixel is a real component, rendered from the same source the CLI installs.</span>
+          <span class="live-only">This one is running. Touch it: the same source the CLI installs, compiled to WebAssembly.</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="proof">
+    <div class="shell">
+      <ul>
+        <li><a href="https://github.com/BalajiReddy1/lamintra/releases/latest">CLI <b>{currentCli}</b></a></li>
+        <li><a href="https://github.com/BalajiReddy1/lamintra-registry">Registry <b>{pinnedRegistry}</b></a></li>
+        <li><b>{count}</b> components</li>
+        <li><b>No</b> Gradle dependency</li>
+        <li>Needs <b>JDK 17+</b></li>
+      </ul>
+    </div>
+  </div>
+
+  {/* The differentiator. Everything else on this page is table stakes. */}
+  <section class="shell section" id="ownership">
+    <div class="section__head">
+      <h2>Delete Lamintra and your code still compiles.</h2>
+      <p class="section__lede">
+        There is no artifact to depend on. The CLI writes plain Kotlin into your
+        source tree, under your package, and then it is finished. No Gradle
+        coordinate, no theme library, no runtime, and no version of ours you can
+        get stuck behind.
+      </p>
+    </div>
+
+    <div class="own-grid">
+      <div class="panel own-card">
+        <h3>What a dependency costs</h3>
+        <p>
+          Someone else decides when a bug is fixed, when a breaking change
+          lands, and whether your Compose upgrade happens this quarter. You
+          inherit a release schedule along with the code.
+        </p>
+      </div>
+      <div class="panel own-card">
+        <h3>What you get instead</h3>
+        <p>
+          Files in your repository, under your package, that you edit like any
+          other file you own. The honest trade is that you take on maintenance
+          in exchange for never being blocked by a maintainer.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell section" id="components">
+    <div class="section__head">
+      <h2>{count} components.</h2>
+      <p class="section__lede">
+        Fewer than you want, and said plainly rather than hidden behind
+        navigation. Each one has rest, pressed, disabled and focus states,
+        resolves in both colour schemes, and animates on springs rather than
+        fixed curves.
+      </p>
+    </div>
+
+    <ul class="index-grid">
+      {components.map((c) => (
+        <li>
+          <a class="component-card" href={`/components/${c.slug}/`}>
+            <span class="component-card__art">
+              <img
+                data-specimen={c.slug}
+                src={`/img/${c.slug}-dark.png`}
+                width={c.renderWidth}
+                height={c.renderHeight}
+                loading="lazy"
+                alt={`The Lamintra ${c.name.toLowerCase()}, rendered from the registry source the CLI installs.`}
+              />
+            </span>
+            <span class="component-card__body">
+              <h3>{c.name}</h3>
+              <code>add {c.slug}</code>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <p class="note">
+      The CLI can install {installableCount}, and every one of them is on this
+      page. Nothing is held back for a paid tier and nothing is hidden behind
+      navigation.
+    </p>
+  </section>
+
+  <section class="shell section" id="questions">
+    <div class="section__head">
+      <h2>Questions a sceptic asks.</h2>
+    </div>
+    {faqs.map((f) => (
+      <details class="faq">
+        <summary>{f.question}</summary>
+        <div><p>{f.answer}</p></div>
+      </details>
+    ))}
+  </section>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const label = btn.textContent;
+      btn.dataset.copied = 'true';
+      btn.textContent = 'Copied';
+      setTimeout(() => {
+        btn.dataset.copied = 'false';
+        btn.textContent = label;
+      }, 1400);
+    });
+  });
+
+  // The live hero, fetched in the background once the page is done being a
+  // page. Not gated behind a click: the argument of this site is that the
+  // components are real, and a proof almost nobody presses does no work.
+  (() => {
+    let supported = false;
+    try {
+      supported =
+        typeof WebAssembly === 'object' &&
+        WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 95, 1, 120, 0]));
+    } catch {
+      supported = false;
+    }
+    if (!supported) return;
+
+    const conn = (navigator as any).connection;
+    if (conn?.saveData) return;
+    if (window.matchMedia('(prefers-reduced-data: reduce)').matches) return;
+
+    // Compose mounts its canvas with tabindex="0", inside a container that is
+    // aria-hidden. That combination is a keyboard trap that announces nothing:
+    // Tab stops on an element no screen reader will describe. The demo is an
+    // enhancement whose content is already carried by the PNG's alt text and by
+    // the component pages, so it comes out of the tab order rather than being
+    // exposed half-labelled.
+    const target = document.getElementById('composeTarget');
+    if (target) {
+      new MutationObserver(() => {
+        target.querySelectorAll('canvas[tabindex]:not([tabindex="-1"])').forEach((c) => {
+          c.setAttribute('tabindex', '-1');
+        });
+      }).observe(target, { childList: true, subtree: true });
+    }
+
+    const start = () => {
+      const s = document.createElement('script');
+      s.src = '/live/demo.js';
+      s.async = true;
+      document.body.appendChild(s);
+    };
+
+    window.addEventListener('load', () => {
+      if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 4000 });
+      else setTimeout(start, 1500);
+    });
+  })();
+</script>

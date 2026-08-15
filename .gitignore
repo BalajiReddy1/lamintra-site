@@ -1,0 +1,54 @@
+node_modules/
+dist/
+.astro/
+
+# Build output from the component repo, published into the site by hand. It is
+# 11MB of wasm and it is reproducible from jetcompose/verification, so it does
+# not belong in history. See CLAUDE.md for the publish command.
+public/live/
+
+# Installed tooling, not this project: 149 files and 2.9MB of skill packages
+# that would have been two thirds of the first commit. `launch.json` is
+# deliberately NOT ignored - it defines the dev servers this repo's docs tell
+# you to run, so it is project configuration and belongs in history.
+.claude/skills/
+.claude/settings.local.json
+
+# Throwaway render harnesses. CHECKLIST.md section 5 says to delete these once
+# the palette stops moving; ignoring them means a forgotten one never ships.
+shot*.png
+_*.html
+
+# ---------------------------------------------------------------------------
+# Internal working documents. These stay on disk and are NOT published.
+#
+# They are the honest version of this project: competitor assessments, pricing
+# thinking, what has not been tested, decisions that were made badly and
+# withdrawn, and the founder's own doubts written down plainly. All of that is
+# useful precisely because nobody is performing for an audience in it, and it
+# stops being useful the moment it has one. CHECKLIST.md also still quotes the
+# founder's old email in the record of a bug.
+#
+# The product repo does the same thing for the same reason: its CLAUDE.md notes
+# that its history was reset specifically to keep strategy out.
+#
+# NOTE: git is not backing these up. Keep a copy somewhere else.
+# ---------------------------------------------------------------------------
+CHECKLIST.md
+CLAUDE.md
+CROSS-REPO.md
+DECISIONS.md
+DESIGN.md
+LAUNCH.md
+PRODUCT.md
+ROADMAP.md
+
+# Not part of the site and explicitly documented as not shipping: a comparison
+# harness for palette candidates, and the retired hand-written page that
+# nothing links to.
+palette-lab.html
+legacy/
+
+# Dev server definitions, which hard-code this machine's absolute paths and
+# therefore work nowhere else while publishing the local directory layout.
+.claude/launch.json

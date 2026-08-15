@@ -1,0 +1,210 @@
+---
+import { Code } from 'astro:components';
+import Base from '../../layouts/Base.astro';
+import { components } from '../../data/registry';
+import { getComponentPage } from '../../lib/registry';
+import { jarCommand } from '../../data/releases';
+
+export function getStaticPaths() {
+  return components.map((c) => ({ params: { slug: c.slug } }));
+}
+
+const { slug } = Astro.params;
+const c = getComponentPage(slug!);
+const install = jarCommand(`add ${c.slug}`);
+
+const required = c.parsed.params.filter((p) => !p.defaultValue);
+const optional = c.parsed.params.filter((p) => p.defaultValue);
+
+/** Everything except this one, for the cross-links at the foot of the page. */
+const siblings = components.filter((x) => x.slug !== c.slug);
+
+/** KDoc marks code with backticks; render those as code rather than as text. */
+function docParts(doc: string) {
+  return doc.split('`').map((text, i) => ({ text, code: i % 2 === 1 }));
+}
+---
+{/* "Button - Lamintra" was 17 characters carrying no keyword at all, which is
+    a page that cannot rank for anything a stranger would type. The blurb stays
+    the visible lede and the meta description extends it, rather than the two
+    being the same string: the lede is written for a reader who is already
+    here, and the description is written for someone deciding whether to come.
+
+    SoftwareSourceCode is the accurate type. These pages ARE the source, listed
+    in full and parsed out of the real Kotlin at build time. */}
+<Base
+  title={`${c.name} component for Compose Multiplatform - Lamintra`}
+  description={`${c.blurb} Copy-paste Compose Multiplatform source, no Gradle dependency.`}
+  section="Components"
+  schema={{
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: `Lamintra ${c.name}`,
+    description: c.blurb,
+    programmingLanguage: 'Kotlin',
+    runtimePlatform: 'Compose Multiplatform',
+    codeRepository: 'https://github.com/BalajiReddy1/lamintra-registry',
+    license: 'https://github.com/BalajiReddy1/lamintra/blob/master/LICENSE',
+    isPartOf: { '@type': 'SoftwareApplication', name: 'Lamintra' },
+  }}
+>
+  <article class="shell section">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/components/">Components</a>
+      <span aria-hidden="true">/</span>
+      <span>{c.name}</span>
+    </nav>
+
+    <header class="doc-head">
+      <h1>{c.name}</h1>
+      <p class="section__lede">{c.blurb}</p>
+      <div class="command">
+        <code><span class="dim">$</span>&nbsp;{install}</code>
+        <button type="button" class="plausible-event-name=Copy+command" data-copy={install}>Copy</button>
+      </div>
+    </header>
+
+    <section class="doc-block">
+      <h2>Preview</h2>
+      <p class="doc-note">
+        Rendered headlessly from <code>{c.sourceFile}</code>. Switch the scheme
+        in the header and this changes with it: both are real renders of the
+        same source rather than one filtered to look like the other.
+      </p>
+      <div class="well doc-preview">
+        {/* Pinned to the render's own design width. The PNG is a 2x asset, so
+            left to size itself it displays at 760px - nearly twice the size the
+            component was drawn at - and every control looks oversized. */}
+        <img
+          data-specimen={c.slug}
+          src={`/img/${c.slug}-dark.png`}
+          style={`width: min(100%, ${c.renderWidth}px)`}
+          width={c.renderWidth}
+          height={c.renderHeight}
+          alt={`The Lamintra ${c.name.toLowerCase()} in its states, rendered from the registry source.`}
+        />
+      </div>
+    </section>
+
+    <section class="doc-block">
+      <h2>Parameters</h2>
+      <p class="doc-note">
+        Read out of <code>{c.sourceFile}</code> when this page was built, not
+        written by hand, so it cannot drift from the file the CLI installs.{' '}
+        {required.length} required, {optional.length} with defaults.
+      </p>
+
+      <div class="table-scroll">
+        <table class="props">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            {c.parsed.params.map((p) => (
+              <tr>
+                <td>
+                  <code class="props__name">{p.name}</code>
+                  {!p.defaultValue && <span class="req" title="Required">required</span>}
+                  {p.doc && (
+                    <span class="props__doc">
+                      {docParts(p.doc).map((part) =>
+                        part.code ? <code>{part.text}</code> : part.text
+                      )}
+                    </span>
+                  )}
+                </td>
+                <td><code>{p.type}</code></td>
+                <td>
+                  {p.defaultValue
+                    ? <code class="props__default">{p.defaultValue}</code>
+                    : <span class="props__none">-</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="doc-block">
+      <h2>What lands in your project</h2>
+      <p class="doc-note">
+        {c.files.length} {c.files.length === 1 ? 'file' : 'files'}, written under
+        your own package. The internals are namespaced per component
+        (<code>internal/{c.manifest.prefix}/</code>), which is what lets two
+        components ship same-named helpers without colliding.
+      </p>
+      <ul class="filetree">
+        {c.files.map((f) => <li><code>{f.replace(/^src\//, '')}</code></li>)}
+      </ul>
+    </section>
+
+    <section class="doc-block">
+      <h2>Source</h2>
+      <p class="doc-note">
+        The whole file, verbatim. This is the component: there is nothing behind
+        it, no artifact to depend on, and deleting Lamintra afterwards leaves it
+        compiling.
+      </p>
+      <div class="source">
+        <Code code={c.source} lang="kotlin" themes={{ light: 'github-light', dark: 'github-dark' }} defaultColor={false} />
+      </div>
+    </section>
+
+    {/* These pages were dead ends: every one of them linked back to the index
+        and nowhere else, and /install/ had no in-content link pointing at it
+        from anywhere on the site despite being the page the whole thing exists
+        to reach. Both links below are ones a reader on this page actually
+        wants next, which is the only reason to add either. */}
+    <section class="doc-block">
+      <h2>Next</h2>
+      <p class="doc-note">
+        The command above assumes the project has been set up once already.
+        If it has not, <a href="/install/">the install page</a> covers what{' '}
+        <code>init</code> detects and writes, and what to do when it guesses
+        wrong.
+      </p>
+      <p class="doc-note">
+        The other components:{' '}
+        {siblings.map((s, i) => (
+          <>
+            {i > 0 && ', '}
+            <a href={`/components/${s.slug}/`}>{s.name.toLowerCase()}</a>
+          </>
+        ))}.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const label = btn.textContent;
+      btn.dataset.copied = 'true';
+      btn.textContent = 'Copied';
+      setTimeout(() => {
+        btn.dataset.copied = 'false';
+        btn.textContent = label;
+      }, 1400);
+    });
+  });
+</script>

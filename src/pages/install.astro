@@ -1,0 +1,173 @@
+---
+import { Code } from 'astro:components';
+import Base from '../layouts/Base.astro';
+import { currentCli, pinnedRegistry, jarFile, jarCommand } from '../data/releases';
+import { components } from '../data/registry';
+
+const shiki = { themes: { light: 'github-light', dark: 'github-dark' }, defaultColor: false } as const;
+
+const initOutput = `lamintra init
+
+Detected from your project:
+  Type         : Kotlin Multiplatform
+  Source root  : composeApp/src/commonMain/kotlin
+  Root package : com.yourorg.yourapp
+  Components   : com.yourorg.yourapp.ui.components.*
+
+Use these settings? [Y/n]`;
+
+const addOutput = `$ ${jarCommand('add button')}
+
+Installed button with zero manual fixes needed.`;
+---
+<Base
+  title="Install Lamintra for Compose Multiplatform"
+  description="Install a Compose Multiplatform component with one command. Needs JDK 17 or later. No Gradle dependency and nothing added to your build."
+  section="Install"
+>
+  <article class="shell section prose">
+    <header class="doc-head">
+      <h1>Install</h1>
+      <p class="section__lede">
+        Two commands. The first you run once per project, the second every time
+        you want a component. Nothing is added to your Gradle build, because
+        there is nothing to add.
+      </p>
+    </header>
+
+    <section class="doc-block">
+      <h2>Before you start</h2>
+      <p>
+        You need <b>JDK 17 or later</b>, which you already have if you are
+        building Android or Kotlin Multiplatform. Nothing else: the CLI is a
+        single jar with no dependencies of its own, and it is not a Gradle
+        plugin, an npm package or a SDKMAN candidate.
+      </p>
+      <p class="doc-note">
+        <a href="https://github.com/BalajiReddy1/lamintra/releases/latest">
+          Download <code>{jarFile}</code> from the latest release
+        </a>{' '}({currentCli}). It is the only thing you download.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>1. Set the project up, once</h2>
+      <div class="command">
+        <code><span class="dim">$</span>&nbsp;{jarCommand('init')}</code>
+        <button type="button" class="plausible-event-name=Copy+command" data-copy={jarCommand('init')}>Copy</button>
+      </div>
+      <p>
+        <code>init</code> reads your project off disk to work out where components
+        should go. It does not evaluate Gradle, so it is fast and it cannot be
+        broken by a build script it does not understand.
+      </p>
+      <div class="source"><Code code={initOutput} lang="text" {...shiki} /></div>
+      <p>
+        Accepting writes <code>.lamintra/config.json</code>, and that file is the
+        entire footprint of the tool in your repository. If detection is wrong, or
+        your layout is unusual, answering <code>n</code> asks you the same
+        questions directly.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>2. Add a component, whenever</h2>
+      <div class="command">
+        <code><span class="dim">$</span>&nbsp;{jarCommand('add button')}</code>
+        <button type="button" class="plausible-event-name=Copy+command" data-copy={jarCommand('add button')}>Copy</button>
+      </div>
+      <div class="source"><Code code={addOutput} lang="text" {...shiki} /></div>
+      <p>
+        Any of the {components.length} names on the{' '}
+        <a href="/components/">components page</a> works:{' '}
+        {components.map((c, i) => (
+          <>
+            {i > 0 && ', '}
+            <code>{c.slug}</code>
+          </>
+        ))}.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>What "with zero manual fixes" actually means</h2>
+      <p>
+        This is the part that is not marketing. A copy-pasted <code>.tsx</code> file
+        runs wherever you drop it. A copy-pasted <code>.kt</code> file{' '}
+        <b>does not compile at all</b> unless its <code>package</code> declaration
+        matches its physical location on disk, which is a hard Kotlin compiler
+        rule rather than a convention.
+      </p>
+      <p>
+        So a component published under <code>com.lamintra.button</code> is broken
+        the moment it lands in your <code>com.yourorg.yourapp</code> tree. The CLI
+        rewrites the package declaration, the internal imports, and the file path
+        together, so the file compiles where it lands. That is the whole reason
+        this is a tool and not a page of snippets.
+      </p>
+      <p class="doc-note">
+        The rewrite is boundary-safe: rewriting <code>com.lamintra.button</code>{' '}
+        never touches a package that merely shares its prefix.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Where the code comes from</h2>
+      <p>
+        The CLI fetches from the public registry repository, pinned to the tag{' '}
+        <code>{pinnedRegistry}</code> rather than to <code>main</code>. A push to
+        the registry cannot change what your <code>add</code> installs; only
+        upgrading the CLI can.
+      </p>
+      <p class="doc-note">
+        <a href="https://github.com/BalajiReddy1/lamintra-registry">The registry is public</a>,
+        so you can read exactly what a command will write before you run it.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Deleting Lamintra</h2>
+      <p>
+        Delete <code>{jarFile}</code> and the <code>.lamintra</code> directory.
+        That is the whole uninstall. The components stay, because they were only
+        ever your files: they import <code>compose.foundation</code> and nothing
+        else, so there is no artifact to remove from your build and nothing to
+        unblock you.
+      </p>
+      <p>
+        This is the one claim the nearest alternative cannot make. It is also
+        the reason there is no "upgrade" command: once a component is in your
+        repository, it is yours to change, and a tool that rewrote your edits
+        later would be taking that back.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const label = btn.textContent;
+      btn.dataset.copied = 'true';
+      btn.textContent = 'Copied';
+      setTimeout(() => {
+        btn.dataset.copied = 'false';
+        btn.textContent = label;
+      }, 1400);
+    });
+  });
+</script>

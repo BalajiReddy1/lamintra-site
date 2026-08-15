@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!--
+  Source for public/img/og-card.png, rendered at 1200x630 by scripts/og-card.mjs.
+
+  This lived in a temporary scratchpad until 2026-08-11, which is exactly why
+  it drifted: it said "5 components" three months after the sixth shipped, and
+  it showed a jar filename that does not exist. It is in the repo now, and
+  every value that can go stale is a token filled in from the same data the
+  site renders from.
+
+  The fonts are inlined as base64 by the script rather than fetched. They used
+  to come from fonts.googleapis.com here, which meant this render depended on
+  the network and on the one origin the whole project went out of its way to
+  remove.
+-->
+<style>
+  @font-face {
+    font-family: Archivo;
+    src: url(data:font/woff2;base64,{{FONT_SANS}}) format('woff2');
+    font-weight: 100 900;
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url(data:font/woff2;base64,{{FONT_MONO}}) format('woff2');
+    font-weight: 100 800;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    background: #040200;
+    background-image: radial-gradient(ellipse 1400px 900px at 50% 0%, #221D15 0%, rgba(34,29,21,0) 72%);
+    font-family: Archivo, sans-serif;
+    color: #F8F5F2;
+    padding: 72px 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    letter-spacing: 0;
+  }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+  .wordmark span { color: #84827E; font-weight: 400; }
+  .meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 17px;
+    color: #84827E; letter-spacing: 0.02em;
+  }
+  h1 {
+    font-size: 82px; font-weight: 700; line-height: 1.02;
+    letter-spacing: -0.03em; max-width: 17ch;
+  }
+  h1 .kicker { display: block; color: #A6A4A1; font-weight: 600; }
+  .cmd {
+    display: inline-flex; align-items: center; gap: 18px;
+    background: #0D0A05; border: 1px solid #5E5A52;
+    border-radius: 999px; padding: 16px 16px 16px 30px;
+    font-family: 'JetBrains Mono', monospace; font-size: 25px;
+    color: #F8F5F2; letter-spacing: -0.005em; align-self: flex-start;
+  }
+  .cmd .dim { color: #84827E; }
+  .cmd .pill {
+    background: #F8F5F2; color: #040200; border-radius: 999px;
+    padding: 9px 22px; font-family: Archivo, sans-serif;
+    font-size: 19px; font-weight: 600; letter-spacing: 0;
+  }
+  .bottom { display: flex; align-items: center; justify-content: space-between; }
+  .facts { display: flex; gap: 30px; font-size: 20px; color: #A6A4A1; }
+  .facts b { color: #F8F5F2; font-weight: 600; }
+  .accent { width: 10px; height: 10px; border-radius: 50%; background: #C8FF34; display: inline-block; margin-right: 10px; vertical-align: middle; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="wordmark">lamintra<span>/ui</span></div>
+    <div class="meta">MIT &nbsp;/&nbsp; JDK 17+ &nbsp;/&nbsp; {{VERSION}}</div>
+  </div>
+
+  <h1><span class="kicker">Compose components</span> that aren't Material.</h1>
+
+  <div class="cmd">
+    <span><span class="dim">$</span>&nbsp;{{COMMAND}}</span>
+    <span class="pill">Copy</span>
+  </div>
+
+  <div class="bottom">
+    <div class="facts">
+      <span><b>No</b> Gradle dependency</span>
+      <span><b>{{COUNT}}</b> components</span>
+      <span>Android, iOS, desktop, web</span>
+    </div>
+    <div class="meta"><span class="accent"></span>compose.foundation only</div>
+  </div>
+</body>
+</html>

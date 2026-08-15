@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# AI search crawlers (OAI-SearchBot, PerplexityBot, ClaudeBot, Google-Extended)
+# are covered by the wildcard above, deliberately. Each has its own user-agent
+# and a Disallow removes this site from that engine's citations entirely, which
+# is the wrong trade for a project with no backlinks and no social proof.
+
+# Sitemap: an absolute URL is required here, so this line lands the day a
+# domain is bought. See CHECKLIST.md section 1.
+# Sitemap: https://REPLACE-ME/sitemap.xml

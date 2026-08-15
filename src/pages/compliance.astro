@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import { lastUpdated, contactUrl } from '../data/legal';
+---
+<Base
+  title="Compliance - Lamintra"
+  description="How Lamintra stands against GDPR, UK GDPR, CCPA, accessibility and export rules, including the one thing that is not yet resolved."
+>
+  <article class="shell section prose">
+    <header class="doc-head">
+      <h1>Compliance</h1>
+      <p class="section__lede">
+        What the regimes below actually require of a site that collects nothing,
+        and the one place this site does not yet clear the bar.
+      </p>
+      <p class="doc-note">Last updated {lastUpdated}.</p>
+    </header>
+
+    <section class="doc-block">
+      <h2>Read this first</h2>
+      <p>
+        <b>This page is a description, not a certification.</b> Nobody has
+        audited this site, no regulator has reviewed it, and nothing here is
+        legal advice. It is written the way the rest of this project is written:
+        stating what is verifiably true and naming what is not, so you can check
+        rather than trust.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>GDPR and UK GDPR</h2>
+      <p>
+        The regulations govern processing of personal data. This site has no
+        accounts, no forms and no cookies, and its analytics stores no personal
+        data, so the only personal data in play is the IP address that any web
+        request necessarily discloses to whoever serves it.
+      </p>
+      <p>
+        <b>Cookie consent is not required here</b>, and that is a fact rather
+        than a preference: consent under the ePrivacy Directive attaches to
+        storing or accessing information on a user's device for purposes that
+        are not strictly necessary. The one thing stored is a scheme preference
+        you set yourself, which is strictly necessary to honour that choice, so
+        there is no banner. A site with nothing to consent to should not be
+        asking.
+      </p>
+      <p>
+        <b>The analytics does not change that.</b> Added 2026-08-11, and chosen
+        on exactly this constraint: Plausible sets no cookie and reads nothing
+        from your device, so the ePrivacy trigger is never pulled, and it
+        retains no identifier and no IP address, so there is no personal data to
+        find a lawful basis for. Google Analytics would have required both a
+        banner and a different answer on this page, which is why it was not
+        used. See the <a href="/privacy/">privacy page</a> for what is recorded.
+      </p>
+      <p class="doc-note">
+        <b>Resolved 2026-08-11.</b> The fonts used to load from Google's
+        servers, which disclosed visitor IP addresses to Google before any
+        interaction - an arrangement a German court has held to be processing
+        personal data without a lawful basis. They are now served from this
+        domain. The analytics script is the only third-party request the site
+        makes, and it was picked so that this section did not have to be
+        rewritten backwards. See the <a href="/privacy/">privacy page</a>.
+      </p>
+      <p class="doc-note">
+        <b>The other gap.</b> Article 13 requires a data controller to be
+        identified by name with a means of contact. This project has no legal
+        entity yet, so these pages name a public issue tracker instead. That is
+        a working contact route and not a substitute for a controller identity.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>CCPA and CPRA</h2>
+      <p>
+        California's statutes turn on selling or sharing personal information.
+        Nothing is collected, so nothing is sold, shared, or disclosed for
+        cross-context behavioural advertising, and there is no "Do Not Sell or
+        Share My Personal Information" link because there is no such activity to
+        opt out of.
+      </p>
+      <p>
+        The thresholds that make a business subject to the CCPA in the first
+        place - revenue, volume of consumers, or revenue from selling personal
+        information - are not met either.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Accessibility</h2>
+      <p>
+        The target is <b>WCAG 2.1 level AA</b>. What has actually been verified,
+        on the built pages and in both colour schemes: contrast measured by
+        resolving each computed colour through a canvas rather than by parsing a
+        colour string, with zero failures and a worst case of 4.87:1 against a
+        4.5 requirement; interactive targets at 44 by 44 or larger; full
+        keyboard navigation with a visible focus ring; and no horizontal scroll
+        at 375px.
+      </p>
+      <p>
+        What has not been verified: a screen reader has not been run over these
+        pages end to end, and no assistive-technology user has tested them. That
+        is a real gap and is recorded as one rather than covered by a
+        conformance claim.
+      </p>
+      <p class="doc-note">
+        The components themselves carry the same rule the site does: state is
+        never carried by colour alone. A switch reads correctly in a greyscale
+        screenshot because knob position encodes it, and a segmented control
+        does because thumb position does.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Export control and sanctions</h2>
+      <p>
+        The software contains no cryptography beyond the HTTPS provided by the
+        Java standard library, and is published as open source from a public
+        repository. Distribution is GitHub's, so GitHub's own trade-control
+        terms apply to who can download it.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Children</h2>
+      <p>
+        This is a developer tool with nothing to sign up for and nothing
+        collected, so it is not directed at children and holds no data about
+        anyone regardless of age. COPPA and the UK Age Appropriate Design Code
+        have no subject matter here.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Reporting a problem</h2>
+      <p>
+        Security issues, privacy concerns and accessibility barriers all go to{' '}
+        <a href={contactUrl}>the issue tracker</a>. For a security issue that
+        should not be public, say so in the issue without the details and a
+        private channel will be arranged.
+      </p>
+    </section>
+  </article>
+</Base>

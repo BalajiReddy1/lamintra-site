@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import { lastUpdated, contactUrl } from '../data/legal';
+---
+<Base
+  title="Privacy - Lamintra"
+  description="What this site and the Lamintra CLI collect, which is close to nothing, and the three third parties that do see something."
+>
+  <article class="shell section prose">
+    <header class="doc-head">
+      <h1>Privacy</h1>
+      <p class="section__lede">
+        No accounts, no cookies, no telemetry, and analytics that cannot
+        identify you. This page exists to say what that leaves, rather than to
+        imply it leaves nothing.
+      </p>
+      <p class="doc-note">Last updated {lastUpdated}.</p>
+    </header>
+
+    <section class="doc-block">
+      <h2>What this website stores</h2>
+      <p>
+        One value, in your browser's <code>localStorage</code>, under the key{' '}
+        <code>lamintra-theme</code>. It records whether you chose the dark or
+        light scheme so the page does not flash the wrong one on your next
+        visit. It never leaves your device, it is not a cookie, and clearing
+        site data removes it.
+      </p>
+      <p>
+        There is nothing else on your device. No cookies are set, no session is
+        created, there are no forms to submit, and there is no account to make.
+        Nothing on this site asks who you are.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Analytics</h2>
+      <p>
+        Since 2026-08-11 this site counts page views using{' '}
+        <a href="https://plausible.io/privacy-focused-web-analytics">Plausible</a>,
+        which was chosen over Google Analytics specifically so that the
+        paragraph above stays true.
+      </p>
+      <p>
+        <b>It sets no cookie and stores nothing on your device.</b> It records
+        the page you were on, the referrer, and coarse device and country
+        information derived from your IP address and user agent. It does not
+        store your IP address, does not create a profile, does not follow you
+        between sites, and cannot single you out. There is no identifier that
+        persists past the day, so there is no way to link two of your visits
+        together, including for us.
+      </p>
+      <p>
+        The data is stored on servers in the EU. It is not sold, not shared with
+        advertisers, and there is no advertising network involved at any point.
+      </p>
+      <p class="doc-note">
+        One thing is deliberately measured beyond page views: pressing the{' '}
+        <b>Copy</b> button next to an install command records that a command was
+        copied. It records the event and nothing about who copied it.
+      </p>
+      <p class="doc-note">
+        <b>This is why there is still no cookie banner.</b> Consent attaches to
+        storing or reading information on your device and to processing personal
+        data; this does neither, so there is nothing to consent to. A banner
+        here would be theatre. If you block it anyway, with a content blocker or
+        by refusing the script, every part of this site works exactly the same.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Who else sees your visit</h2>
+      <p>
+        Three parties, and naming them is the honest version of "we collect
+        nothing". <b>Exactly one third-party server is contacted when you load
+        a page here</b>, the analytics script described above. The typefaces are
+        served from this domain, and there is no CDN, no embed, no tag manager
+        and no advertising network.
+      </p>
+      <p class="doc-note">
+        Until 2026-08-11 the fonts loaded from Google's servers, which disclosed
+        your IP address to Google before you interacted with anything. A German
+        court has held that arrangement to be processing personal data without a
+        lawful basis. The font files are now served from here, so that transfer
+        no longer happens.
+      </p>
+
+      <h3>Plausible</h3>
+      <p>
+        The analytics script is served from Plausible and reports a page view
+        back to it. That request necessarily discloses your IP address to
+        Plausible in transit, the same as any request to any server. Plausible
+        does not store it: it is used to derive a country and then discarded.
+        See the section above for what is kept.
+      </p>
+
+      <h3>The host</h3>
+      <p>
+        The site is static files served by a hosting provider, which keeps
+        ordinary server logs including IP addresses, for delivery and abuse
+        prevention. Every website has this; it is not specific to Lamintra.
+      </p>
+
+      <h3>GitHub</h3>
+      <p>
+        Links to the source, the registry and the releases go to GitHub. If you
+        follow one, or download the jar, GitHub sees that request under its own
+        privacy policy.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>What the CLI does on your machine</h2>
+      <p>
+        <code>lamintra init</code> reads your project layout off disk and writes{' '}
+        <code>.lamintra/config.json</code> into your project. That file stays on
+        your machine and is never transmitted.
+      </p>
+      <p>
+        <code>lamintra add</code> makes ordinary HTTPS GET requests to{' '}
+        <code>raw.githubusercontent.com</code> to fetch component sources.
+        GitHub therefore sees your IP address and which files you requested,
+        the same as if you had opened the registry in a browser.
+      </p>
+      <p>
+        <b>The CLI sends nothing back.</b> There is no POST anywhere in it, no
+        telemetry, no usage counter, no crash reporting and no update check. It
+        does not know your project name, your package name, or that you exist.
+        You can confirm this rather than trust it: the CLI is open source, and
+        its only network calls are the GET requests in{' '}
+        <code>Installer.kt</code>.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Your rights, practically</h2>
+      <p>
+        Rights of access, correction, erasure and portability all attach to
+        personal data held about you. Nothing here holds any: there is no
+        database, no account and no record of your visit beyond the host's own
+        logs. There is consequently nothing to export and nothing to delete.
+      </p>
+      <p>
+        If you believe that is wrong, or something on this page has stopped
+        being true, <a href={contactUrl}>open an issue</a> and it will be
+        corrected.
+      </p>
+    </section>
+  </article>
+</Base>

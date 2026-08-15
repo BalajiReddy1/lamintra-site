@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import { lastUpdated, contactUrl, licenceUrl } from '../data/legal';
+---
+<Base
+  title="Terms - Lamintra"
+  description="MIT licensed, provided as-is, no warranty. What you may do with the components, which is essentially anything."
+>
+  <article class="shell section prose">
+    <header class="doc-head">
+      <h1>Terms</h1>
+      <p class="section__lede">
+        Everything here is MIT licensed and provided as-is. The short version:
+        take the code, ship it commercially, change it, and owe nothing.
+      </p>
+      <p class="doc-note">Last updated {lastUpdated}.</p>
+    </header>
+
+    <section class="doc-block">
+      <h2>The licence</h2>
+      <p>
+        The CLI, the component registry and every component you install are
+        released under the <a href={licenceUrl}>MIT licence</a>. That licence is
+        the agreement; this page only describes it, and where the two disagree
+        the licence text wins.
+      </p>
+      <p>
+        In practice MIT means you may use, copy, modify, merge, publish,
+        distribute, sublicense and sell the code, including in closed-source and
+        commercial products. The one condition is that the copyright notice and
+        permission notice travel with substantial copies of the software.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>What you own after installing</h2>
+      <p>
+        The files the CLI writes are yours. They are ordinary Kotlin in your
+        repository, under your package, and nothing reaches back into them:
+        there is no artifact to depend on, no runtime, and no update mechanism
+        that could overwrite an edit you made.
+      </p>
+      <p>
+        You are not required to credit Lamintra in your app, keep any marker in
+        the files, or tell anyone you used it.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>No warranty</h2>
+      <p>
+        This is the part of MIT people skip, so it is worth stating in plain
+        words: the software is provided <b>without warranty of any kind</b>,
+        express or implied, and the authors are not liable for any claim,
+        damages or other liability arising from it.
+      </p>
+      <p>
+        Concretely, nothing here promises the components are fit for your
+        purpose, that a future Compose release will not break one, or that any
+        component will continue to exist under the same name. What is promised
+        is that a component you have already installed cannot change underneath
+        you, because it is a file in your repository rather than a dependency.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>The service, such as it is</h2>
+      <p>
+        There is no service. This is a static website and a jar you download.
+        No account, no subscription, no paid tier, nothing to cancel and no
+        uptime commitment. The registry is fetched from GitHub, so its
+        availability is GitHub's.
+      </p>
+      <p>
+        There is also no acceptable use policy, because there is nothing to
+        misuse: no upload, no submission and no user content of any kind.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Changes and contact</h2>
+      <p>
+        If these terms change the date at the top changes with them. The licence
+        itself is versioned in the repository, so any change to it is visible in
+        history rather than announced here.
+      </p>
+      <p>
+        Questions go to <a href={contactUrl}>the issue tracker</a>, which is a
+        public channel and the only one.
+      </p>
+    </section>
+  </article>
+</Base>
