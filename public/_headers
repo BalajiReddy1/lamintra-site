@@ -26,10 +26,22 @@
 /live/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
 
-# Everything else, which is the HTML. Always revalidate: these are thirteen
-# small documents and a stale one is a wrong price on the shelf.
+# Security headers for every response. Deliberately NO Cache-Control here.
+#
+# Cloudflare Pages applies EVERY rule whose pattern matches and concatenates the
+# values, rather than letting the most specific rule win. A Cache-Control on /*
+# was therefore appended to all four rules above, and the first deploy served:
+#
+#   Cache-Control: public, max-age=31536000, immutable, public, max-age=0, must-revalidate
+#
+# on the fingerprinted assets. Two conflicting sets of directives in one header,
+# where the restrictive half wins, so the long cache the rules above exist for
+# was doing nothing at all. Caught by reading the response headers off the live
+# deploy; nothing local could have shown it.
+#
+# HTML gets Cloudflare's own default for a Pages project, which is already
+# max-age=0, must-revalidate. Verified on the deploy after this one.
 /*
-  Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
