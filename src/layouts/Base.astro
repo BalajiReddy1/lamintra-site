@@ -45,10 +45,21 @@ const { title, description, section, schema } = Astro.props;
  */
 const analyticsDomain = Astro.site?.hostname;
 
-// Astro gives the built path; used for og:url and canonical the day a domain
-// exists. Kept relative until then, because a guessed origin is worse than an
-// obviously missing one.
-const path = Astro.url.pathname;
+/**
+ * The absolute URL of this page, and the absolute og:image.
+ *
+ * Both resolve to null when `site` is unset in astro.config.mjs, and every tag
+ * that depends on them is then simply not emitted. That is deliberate: a
+ * canonical tag pointing at a domain nobody owns is worse than no canonical
+ * tag, and this was the state the site shipped in for weeks.
+ *
+ * `Astro.site` is the single place the origin is written down. Nothing else in
+ * the codebase may hard-code it.
+ */
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : null;
+const ogImage = Astro.site
+  ? new URL('/img/og-card.png', Astro.site).href
+  : '/img/og-card.png';
 
 const nav = [
   { href: '/components/', label: 'Components' },
@@ -68,16 +79,21 @@ const nav = [
 
 <meta name="robots" content="index, follow, max-image-preview:large">
 
-{/* Social. og:image stays RELATIVE and og:url is absent entirely: crawlers do
-    not reliably resolve a relative og:image, but a hard-coded guess at a
-    domain that does not exist yet is worse. Both, plus canonical and
-    sitemap.xml, land in one pass the day the domain is bought - which is also
-    when astro.config.mjs gets its `site`. Tracked in CHECKLIST.md. */}
+{/* The domain was bought 2026-08-11, so this is the pass the comment here used
+    to promise. Until then og:image stayed relative and canonical and og:url
+    were absent entirely, because a hard-coded guess at a domain that does not
+    exist is worse than an obviously missing tag.
+
+    All three are absolute now and all three are DERIVED from `site`, so there
+    is exactly one place a domain is written down. If `site` is ever unset again
+    these fall away rather than pointing at a dead origin. */}
+{canonical && <link rel="canonical" href={canonical} />}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lamintra">
 <meta property="og:title" content={title}>
 <meta property="og:description" content={description}>
-<meta property="og:image" content="/img/og-card.png">
+{canonical && <meta property="og:url" content={canonical} />}
+<meta property="og:image" content={ogImage}>
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 {/* Derived, because this describes a picture of the command and said the wrong

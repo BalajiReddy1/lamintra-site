@@ -22,9 +22,14 @@ export default defineConfig({
     // nobody enjoys finding after deploy.
     format: 'directory',
   },
-  // No site url yet. Astro uses it for canonical, sitemap and absolute og:image,
-  // and all three are already blocked on the domain in CHECKLIST.md. A guessed
-  // origin is worse than an obviously missing one, so this stays out until the
-  // domain is bought and then all four land in one pass.
-  // site: 'https://lamintra.com',
+  // Bought 2026-08-11. This one line is load-bearing for five separate things,
+  // all of which were built and tested against both states before the domain
+  // existed: canonical URLs, og:url, an absolute og:image, sitemap.xml (written
+  // by scripts/sitemap.mjs as a postbuild step, which also uncomments the
+  // Sitemap: line in robots.txt), and the analytics script, whose data-domain
+  // is this hostname and which is not emitted at all without it.
+  //
+  // No trailing slash. Astro joins paths onto this and a trailing slash
+  // produces "https://lamintra.com//install/" in the canonical tag.
+  site: 'https://lamintra.com',
 });
