@@ -20,28 +20,23 @@ shot*.png
 _*.html
 
 # ---------------------------------------------------------------------------
-# Internal working documents. These stay on disk and are NOT published.
+# Internal working documents, in their own PRIVATE git repository.
 #
-# They are the honest version of this project: competitor assessments, pricing
-# thinking, what has not been tested, decisions that were made badly and
-# withdrawn, and the founder's own doubts written down plainly. All of that is
-# useful precisely because nobody is performing for an audience in it, and it
-# stops being useful the moment it has one. CHECKLIST.md also still quotes the
-# founder's old email in the record of a bug.
+# `internal/` holds every planning document plus this repo's real working
+# rules. It is a separate repo so it can be backed up to a private GitHub
+# remote without any of it becoming public: it contains competitor
+# assessments, pricing thinking, decisions that were made badly and withdrawn,
+# and the founder's own doubts written down plainly. That honesty is what makes
+# the documents useful and it stops being useful the moment they have an
+# audience. CHECKLIST.md also still quotes an old personal email in the record
+# of a bug.
 #
 # The product repo does the same thing for the same reason: its CLAUDE.md notes
 # that its history was reset specifically to keep strategy out.
 #
-# NOTE: git is not backing these up. Keep a copy somewhere else.
+# The root CLAUDE.md is a public-safe pointer at internal/ and IS tracked here.
 # ---------------------------------------------------------------------------
-CHECKLIST.md
-CLAUDE.md
-CROSS-REPO.md
-DECISIONS.md
-DESIGN.md
-LAUNCH.md
-PRODUCT.md
-ROADMAP.md
+internal/
 
 # Not part of the site and explicitly documented as not shipping: a comparison
 # harness for palette candidates, and the retired hand-written page that
