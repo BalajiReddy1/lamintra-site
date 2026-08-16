@@ -144,12 +144,25 @@ const schema = [
 
   <section class="shell section" id="components">
     <div class="section__head">
-      <h2>{count} components.</h2>
+      {/* The count stays, the apology does not.
+
+          This read "{count} components." over "Fewer than you want, and said
+          plainly rather than hidden behind navigation." The instinct was right
+          and the placement was wrong: it put the weakest fact about the product
+          in the largest type on the section, and led a reader who had not yet
+          decided to care with a reason not to. Honesty does not require
+          conceding first.
+
+          The count is still here, and the note under the grid still says
+          nothing is held back. What changed is that the headline now carries
+          the claim worth checking instead of the number worth apologising for.
+          /components/ already led with this; the home page did not. */}
+      <h2>{count} components, and every render here is the real one.</h2>
       <p class="section__lede">
-        Fewer than you want, and said plainly rather than hidden behind
-        navigation. Each one has rest, pressed, disabled and focus states,
-        resolves in both colour schemes, and animates on springs rather than
-        fixed curves.
+        Drawn headlessly from the same Kotlin the CLI writes into your project,
+        so what you are looking at is what lands. Each carries rest, pressed,
+        disabled and focus states, resolves in both colour schemes, and settles
+        on springs rather than fixed curves.
       </p>
     </div>
 

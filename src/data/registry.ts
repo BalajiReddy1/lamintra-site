@@ -22,7 +22,10 @@ export interface Component {
   tier: 'base' | 'signature';
 }
 
-export const components: Component[] = [
+/**
+ * In the order they were built. Not the order they are shown - see below.
+ */
+const catalogue: Component[] = [
   {
     slug: 'button',
     name: 'Button',
@@ -87,6 +90,23 @@ export const components: Component[] = [
     renderHeight: 300,
     tier: 'signature',
   },
+];
+
+/**
+ * Signature tier first, then base, and derived rather than hand-ordered.
+ *
+ * The gallery used to run in build order, which put `button`, `card` and
+ * `text-field` first - the three components every library in this space has -
+ * and left the two that demonstrate why this one exists below the fold. That is
+ * the same instinct as the apologetic headline this section used to carry:
+ * leading with the least distinctive thing on offer.
+ *
+ * Sorted rather than reordered by hand so a future signature component leads
+ * automatically. A rule in a comment gets forgotten; this one cannot be.
+ */
+export const components: Component[] = [
+  ...catalogue.filter((c) => c.tier === 'signature'),
+  ...catalogue.filter((c) => c.tier === 'base'),
 ];
 
 /**
