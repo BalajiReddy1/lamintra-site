@@ -23,6 +23,7 @@ export const cliReleases: Release[] = [
   // "v0.6.0 - v0.6.0: ...". Noted rather than done quietly: the rule above is
   // that summaries are verbatim, and the next tag should just not repeat its
   // own version in the subject.
+  { version: 'v0.6.1', date: '2026-08-16', summary: 'registry v0.5.4, ios-shell without material3' },
   { version: 'v0.6.0', date: '2026-08-16', summary: 'ios-shell scaffold, registry v0.5.3' },
   { version: 'v0.5.0', date: '2026-08-06', summary: 'Wave 1: flat slugs, new base-tier language, retire the neon fixtures' },
   { version: 'v0.4.0', date: '2026-08-06', summary: 'Ship the rename: registry v0.4.0, CLI v0.4.0' },
@@ -43,15 +44,15 @@ export const cliReleases: Release[] = [
  * (It lived in `Installer.kt` until 2026-08-16, when the transport moved so
  * that `add` and `scaffold` could share it.)
  */
-export const currentCli = 'v0.6.0';
-export const pinnedRegistry = 'v0.5.3';
+export const currentCli = 'v0.6.1';
+export const pinnedRegistry = 'v0.5.4';
 
 /**
  * The downloaded file's real name, which is NOT `lamintra.jar`.
  *
  * `archiveVersion` in cli-kotlin/build.gradle.kts puts the version in the
  * filename, and release.yml uploads that file as-is, so what a visitor gets
- * from the release page is `lamintra-0.6.0.jar`. The site said
+ * from the release page is `lamintra-0.6.1.jar`. The site said
  * `java -jar lamintra.jar` in six hand-written places, so the first command
  * every new user copied failed with "Unable to access jarfile". The founder
  * hit it on the first real install test on 2026-08-11.
