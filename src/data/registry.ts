@@ -72,6 +72,14 @@ export const components: Component[] = [
     tier: 'base',
   },
   {
+    slug: 'swipe-row',
+    name: 'Swipe row',
+    blurb: 'Wraps any row. The actions slide in behind it, and a long swipe arms delete.',
+    renderWidth: 420,
+    renderHeight: 170,
+    tier: 'signature',
+  },
+  {
     slug: 'sheet',
     name: 'Sheet',
     blurb: 'Release it mid-drag and it keeps your speed. The scrim follows your thumb.',
@@ -96,4 +104,4 @@ export const components: Component[] = [
  * ever added to the registry before its doc page exists, this is the honest
  * place to say so.
  */
-export const installableCount = 7;
+export const installableCount = 8;
