@@ -19,6 +19,15 @@ Use these settings? [Y/n]`;
 const addOutput = `$ ${jarCommand('add button')}
 
 Installed button with zero manual fixes needed.`;
+
+// Copied from a real run against the published registry on 2026-08-16, not
+// written by hand. The paths are what the CLI actually printed.
+const scaffoldOutput = `$ ${jarCommand('scaffold ios-shell')}
+
+  wrote: iosApp/iosApp/LamintraShell.swift
+  wrote: iosApp/iosApp/ComposeScreen.swift
+  wrote: composeApp/src/iosMain/kotlin/.../ui/shell/ShellEntry.kt
+  wrote: composeApp/src/commonMain/kotlin/.../ui/shell/ShellRoutes.kt`;
 ---
 <Base
   title="Install Lamintra for Compose Multiplatform"
@@ -29,9 +38,9 @@ Installed button with zero manual fixes needed.`;
     <header class="doc-head">
       <h1>Install</h1>
       <p class="section__lede">
-        Two commands. The first you run once per project, the second every time
-        you want a component. Nothing is added to your Gradle build, because
-        there is nothing to add.
+        Two commands, and a third if you ship to iOS. The first you run once
+        per project, the second every time you want a component. Nothing is
+        added to your Gradle build, because there is nothing to add.
       </p>
     </header>
 
@@ -86,6 +95,41 @@ Installed button with zero manual fixes needed.`;
             <code>{c.slug}</code>
           </>
         ))}.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>3. Optional: native iOS chrome</h2>
+      <div class="command">
+        <code><span class="dim">$</span>&nbsp;{jarCommand('scaffold ios-shell')}</code>
+        <button type="button" class="plausible-event-name=Copy+command" data-copy={jarCommand('scaffold ios-shell')}>Copy</button>
+      </div>
+      <p>
+        Compose draws to its own canvas, so it cannot draw the iOS tab bar or
+        navigation bar. On iOS 26 that matters more than it used to: Liquid
+        Glass is applied by the system through SwiftUI's{' '}
+        <code>TabView</code> and <code>NavigationStack</code>, so an app that
+        draws its own chrome in Compose does not get it, and no amount of
+        styling will produce it.
+      </p>
+      <p>
+        This writes the other arrangement: SwiftUI owns the tab bar and the
+        navigation stacks, Compose renders the content of each screen. Two Swift
+        files, two Kotlin files, and it{' '}
+        <a href="https://kotlinlang.org/docs/multiplatform/ios-liquid-glass.html">
+          follows the structure JetBrains documents
+        </a>.
+      </p>
+      <div class="source"><Code code={scaffoldOutput} lang="text" {...shiki} /></div>
+      <p class="doc-note">
+        Two things it deliberately does not do. It will not add the Swift files
+        to your Xcode target, because editing a <code>.pbxproj</code> from a
+        command line is how project files get corrupted; drag them in once. And
+        the view it writes is not <code>@main</code>, because the Compose
+        Multiplatform template already ships one and a second does not compile,
+        so you point your existing app at <code>LamintraShell()</code>. Both are
+        printed after it runs. Requires a Kotlin Multiplatform project; it stops
+        with an explanation on an Android-only one.
       </p>
     </section>
 
