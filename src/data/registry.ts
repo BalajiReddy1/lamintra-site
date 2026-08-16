@@ -71,6 +71,14 @@ export const components: Component[] = [
     renderHeight: 212,
     tier: 'base',
   },
+  {
+    slug: 'sheet',
+    name: 'Sheet',
+    blurb: 'Release it mid-drag and it keeps your speed. The scrim follows your thumb.',
+    renderWidth: 380,
+    renderHeight: 300,
+    tier: 'signature',
+  },
 ];
 
 /**
@@ -88,4 +96,4 @@ export const components: Component[] = [
  * ever added to the registry before its doc page exists, this is the honest
  * place to say so.
  */
-export const installableCount = 6;
+export const installableCount = 7;
