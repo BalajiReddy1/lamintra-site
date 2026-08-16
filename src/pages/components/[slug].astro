@@ -20,6 +20,9 @@ const optional = c.parsed.params.filter((p) => p.defaultValue);
 /** Everything except this one, for the cross-links at the foot of the page. */
 const siblings = components.filter((x) => x.slug !== c.slug);
 
+/** Shown in the disclosure, so the reader knows what they are opening. */
+const sourceLines = c.source.split(/\r?\n/).length;
+
 /** KDoc marks code with backticks; render those as code rather than as text. */
 function docParts(doc: string) {
   return doc.split('`').map((text, i) => ({ text, code: i % 2 === 1 }));
@@ -143,6 +146,19 @@ function docParts(doc: string) {
       </ul>
     </section>
 
+    {/* Folded, not removed.
+
+        These listings run 159 to 390 lines, and at full height the source was
+        most of the page: the props table, the file list and the links to
+        anywhere else all sat above a wall of Kotlin nobody scrolls through on
+        a first visit.
+
+        Deleting it was the other option and it is the wrong one. "Read it
+        before you run it" is the product's actual claim, and a page that asks
+        you to run a jar against your source tree while linking the code to
+        somewhere else is asking for more trust than it earns. Closed by
+        default with the line count on the button costs the sceptic one click
+        and gives everyone else their page back. */}
     <section class="doc-block">
       <h2>Source</h2>
       <p class="doc-note">
@@ -150,9 +166,14 @@ function docParts(doc: string) {
         it, no artifact to depend on, and deleting Lamintra afterwards leaves it
         compiling.
       </p>
-      <div class="source">
-        <Code code={c.source} lang="kotlin" themes={{ light: 'github-light', dark: 'github-dark' }} defaultColor={false} />
-      </div>
+      <details class="fold">
+        <summary>
+          Read {c.sourceFile} <span class="fold__meta">{sourceLines} lines</span>
+        </summary>
+        <div class="source">
+          <Code code={c.source} lang="kotlin" themes={{ light: 'github-light', dark: 'github-dark' }} defaultColor={false} />
+        </div>
+      </details>
     </section>
 
     {/* These pages were dead ends: every one of them linked back to the index

@@ -176,7 +176,7 @@ const nav = [
 
 <header class="masthead" id="masthead">
   <div class="shell masthead__inner">
-    <a class="wordmark" href="/">lamintra<span>/ui</span></a>
+    <a class="wordmark" href="/">Lamintra</a>
     <nav aria-label="Primary">
       {nav.map((item) => (
         <a
@@ -197,19 +197,23 @@ const nav = [
   <slot />
 </main>
 
+{/* One row, six links.
+
+    It was two rows with an empty <p> between them: the paragraph held the MIT
+    line until that was cut on 2026-08-16 and the empty element was left,
+    which is what pushed the first nav to the right and forced a second row for
+    the legal links. Two rows and a gap for six words.
+
+    Still two <nav> elements rather than one, because they are labelled
+    differently and a screen reader announcing "Legal" is doing real work. They
+    just share a line now. */}
 <footer class="colophon">
   <div class="shell">
-    <p>
-    </p>
     <nav aria-label="Footer">
       <a href="https://github.com/BalajiReddy1/lamintra">Source</a>
       <a href="https://github.com/BalajiReddy1/lamintra-registry">Registry</a>
       <a href="https://github.com/BalajiReddy1/lamintra/releases/latest">Releases</a>
     </nav>
-  </div>
-  {/* Legal lives in the footer rather than the masthead: it has to be
-      reachable from every page, and it is not what anyone came for. */}
-  <div class="shell colophon__legal">
     <nav aria-label="Legal">
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
