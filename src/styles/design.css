@@ -515,6 +515,12 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
     transition-property: opacity, background-color, border-color, color, fill, stroke, box-shadow;
     scroll-behavior: auto !important;
   }
+
+  /* The list above is a transition-property allowlist, so it stops these being
+     ANIMATED - it does not stop them applying. A hover that still displaces the
+     card by 2px, instantly, is worse than one that eases: it is the same
+     movement with the easing removed. Reduced motion means no movement. */
+  .component-card:hover { translate: none; }
 }
 
 /* --------------------------------------------------------------------------
@@ -525,7 +531,54 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
    copies. Everything else in this block is subordinate to it.
    -------------------------------------------------------------------------- */
 
+/* --------------------------------------------------------------------------
+   Reveal.
+
+   Armed by the inline script in Base.astro, and only when the reader has NOT
+   asked for reduced motion - so the reduced-motion path is this stylesheet's
+   default state rather than an override of it.
+
+   The default state is VISIBLE. That is the whole safety property: a page
+   whose script fails, or whose observer never fires, shows a finished page
+   rather than a blank one. CHECKLIST section 7 records the version of this
+   that hid everything and waited for an IntersectionObserver, and shipped the
+   entire page below the fold blank to a social crawler. Do not invert it.
+   -------------------------------------------------------------------------- */
+[data-anim] [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity var(--dur-reveal) var(--ease),
+    transform var(--dur-reveal) var(--ease);
+}
+[data-anim] [data-reveal][data-shown] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Only the hero is ever hidden, and only briefly. A scroll reveal for the
+   sections below was built here and removed: see the note in Base.astro. The
+   short version is that it went blank in every context that does not produce
+   animation frames, which includes the crawlers that decide what a link
+   preview looks like.
+
+   The stagger is headline, sentence, command, links - 70ms apart, long enough
+   to read as a sequence and short enough that the whole thing has settled
+   inside 400ms. */
+[data-anim] .hero__copy > [data-reveal]:nth-child(2) { transition-delay: 70ms; }
+[data-anim] .hero__copy > [data-reveal]:nth-child(3) { transition-delay: 140ms; }
+[data-anim] .hero__copy > [data-reveal]:nth-child(4) { transition-delay: 210ms; }
+[data-anim] .hero__art { transition-delay: 120ms; }
+
 .hero { padding-block: clamp(3rem, 2rem + 6vw, 6rem) var(--space-2xl); }
+
+/* No lighting layer here on purpose. `body` already carries `var(--lift)`, a
+   radial at 50% -10% sized to reach roughly the fold, which is exactly this
+   area - so the page is already the lit stage DESIGN.md asks for. A second
+   gradient over the hero was written here and removed: stacking two washes of
+   the same hue doubles the alpha in the middle, which is how a near-black
+   ground starts banding, and it would have been a redundant effect added on
+   top of a token that already existed and was already wired up. */
 
 /* --step-5, not --step-6. At 96px beside the 300px hero render the text column
    is narrow enough that "that aren't Material." breaks across two lines, which
@@ -700,9 +753,16 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
   overflow: hidden;
   color: inherit;
   text-decoration: none;
-  transition: border-color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease);
+  transition:
+    border-color var(--dur-state) var(--ease),
+    background-color var(--dur-state) var(--ease),
+    translate var(--dur-state) var(--ease);
 }
-.component-card:hover { border-color: var(--line-strong); background: var(--bg-raised); }
+/* `translate`, not `transform`. The reveal animates `transform` on these same
+   cards, and a hover that wrote to the same property would cancel the reveal
+   mid-flight for anyone whose pointer landed on a card while it was arriving.
+   They are independent properties and compose. */
+.component-card:hover { border-color: var(--line-strong); background: var(--bg-raised); translate: 0 -2px; }
 
 /* Specimen renders. Both schemes ship in the markup and these three rules pick
    one, so changing scheme is a repaint and not nine image fetches each landing

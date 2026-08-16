@@ -141,6 +141,32 @@ const nav = [
     el.setAttribute('data-theme', s);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', s === 'light' ? '#F5F8F9' : '#040200');
+
+    // Arm the reveal before first paint, and only for a reader who has not
+    // asked for less motion. Here rather than in the deferred script because
+    // arming sets the START state: done later, the page paints finished and
+    // then jumps back to hidden to animate, which is worse than no animation.
+    //
+    // The timer is the important half, not the arming. Elements are visible by
+    // default in the stylesheet and arming HIDES them, so anything that stops
+    // the reveal finishing would leave the page blank.
+    //
+    // UNCONDITIONAL, and that is the correction. This first checked a flag the
+    // reveal script sets, which was worthless: the flag says the script started,
+    // not that it can function. In a context that produces no animation frames
+    // the script sets the flag, never gets a frame to reveal anything in, and
+    // the failsafe then politely declines to help. Measured: zero of ten
+    // elements revealed, flag true, page blank.
+    //
+    // Removing the attribute only ever removes the HIDING, so firing it when it
+    // was not needed costs nothing - anything already revealed stays revealed.
+    // There is no case where checking first is better.
+    try {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.setAttribute('data-anim', 'on');
+        setTimeout(function () { el.removeAttribute('data-anim'); }, 2500);
+      }
+    } catch (e) {}
   })();
 </script>
 </head>
@@ -226,6 +252,37 @@ const nav = [
     var onScroll = function () { mast.dataset.scrolled = String(window.scrollY > 8); };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* Reveal, and only for the hero.
+
+       There WAS a scroll reveal here, one per section, driven by an
+       IntersectionObserver. It is gone, and the reason is worth keeping.
+
+       Measured, not assumed: in a headless render everything below the hero
+       came back blank, and in a pane that produces no animation frames all ten
+       elements stayed hidden. The observer is fine in a browser someone is
+       looking at; it is unreliable in exactly the contexts that matter most -
+       crawlers, screenshot capture, embedded webviews - and those are the ones
+       where a blank page is never seen by anyone who could report it.
+       CHECKLIST section 7 already records this trap from the old page. It took
+       reintroducing it to believe it.
+
+       The hero is different: it is always in the viewport, so it needs no
+       observer, and the failsafe covers the rest. Below the fold nothing is
+       hidden at any point, by anything.
+
+       Two frames, then a timer. The double rAF gets a painted start state so
+       the change transitions rather than jumps; the timeout does the same job
+       where frames are never produced. Both set the same attribute, so
+       whichever arrives first wins and the other is a no-op. */
+    var hero = document.querySelectorAll('.hero [data-reveal]');
+    var showHero = function () {
+      hero.forEach(function (el) { el.setAttribute('data-shown', ''); });
+    };
+    if (root.hasAttribute('data-anim')) {
+      requestAnimationFrame(function () { requestAnimationFrame(showHero); });
+      setTimeout(showHero, 120);
+    }
   })();
 </script>
 </body>

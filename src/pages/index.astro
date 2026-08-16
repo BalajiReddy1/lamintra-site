@@ -46,23 +46,31 @@ const schema = [
 >
   <section class="shell hero">
     <div class="hero__grid">
-      <div>
+      <div class="hero__copy">
         {/* The {' '} is load-bearing. .lead-in is display:block so the line
             breaks either way, but without it h1.textContent reads
             "Compose componentsthat aren't Material." - which is what a
             copy-paste, a text extractor and a search engine building a snippet
             all get from the most important string on the site. */}
-        <h1>
+        <h1 data-reveal>
           <span class="lead-in">Compose components</span>{' '}
           that aren't Material.
         </h1>
-        <p class="hero__lede">
-          And aren't a dependency. One command copies a component into your
-          Kotlin Multiplatform project with its package rewritten to match, so
-          it compiles where it lands.
+        {/* The platform list used to sit in 14px grey under the command bar,
+            which put the least common thing about this product in the smallest
+            type on the page. Every competitor ships components; four platforms
+            from one file is the part a stranger cannot get elsewhere, so it
+            leads now.
+
+            "Kotlin Multiplatform project" went with it: naming the four
+            platforms says the same thing to the same reader without the term. */}
+        <p class="hero__lede" data-reveal>
+          Android, iOS, desktop and web, from one file. One command copies a
+          component into your project and rewrites its package, so it compiles
+          where it lands.
         </p>
 
-        <div class="command" style="margin-block-start: var(--space-xl)">
+        <div class="command" style="margin-block-start: var(--space-xl)" data-reveal>
           <code><span class="dim">$</span>&nbsp;{installCommand}</code>
           {/* The class is how Plausible's tagged-events build records a custom
               event, with no JS of ours. This is the primary CTA and the only
@@ -74,14 +82,14 @@ const schema = [
             nav item, despite being the page this one is trying to send people
             to. The command above needs `init` to have been run once, so the
             link is what the sentence was already missing. */}
-        <p class="hero__secondary">
-          Android, iOS, desktop and web from one file.{' '}
+        <p class="hero__secondary" data-reveal>
+          Nothing is added to your Gradle build.{' '}
           <a href="/components/">See the {count} components</a>, or{' '}
           <a href="/install/">set the project up first</a>.
         </p>
       </div>
 
-      <figure class="hero__art" style="margin: 0">
+      <figure class="hero__art" style="margin: 0" data-reveal>
         <Specimen
           slug="hero"
           width={300}
