@@ -1,6 +1,7 @@
 ---
 import { Code } from 'astro:components';
 import Base from '../../layouts/Base.astro';
+import Specimen from '../../components/Specimen.astro';
 import { components } from '../../data/registry';
 import { getComponentPage } from '../../lib/registry';
 import { jarCommand } from '../../data/releases';
@@ -75,12 +76,11 @@ function docParts(doc: string) {
         {/* Pinned to the render's own design width. The PNG is a 2x asset, so
             left to size itself it displays at 760px - nearly twice the size the
             component was drawn at - and every control looks oversized. */}
-        <img
-          data-specimen={c.slug}
-          src={`/img/${c.slug}-dark.png`}
-          style={`width: min(100%, ${c.renderWidth}px)`}
+        <Specimen
+          slug={c.slug}
           width={c.renderWidth}
           height={c.renderHeight}
+          style={`width: min(100%, ${c.renderWidth}px)`}
           alt={`The Lamintra ${c.name.toLowerCase()} in its states, rendered from the registry source.`}
         />
       </div>

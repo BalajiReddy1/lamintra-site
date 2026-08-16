@@ -208,21 +208,10 @@ const nav = [
       buttons.forEach(function (b) {
         b.setAttribute('aria-pressed', String(b.getAttribute('data-scheme') === scheme));
       });
-      document.querySelectorAll('[data-specimen]').forEach(function (img) {
-        var next = '/img/' + img.getAttribute('data-specimen') + '-' + scheme + '.png';
-        if (img.getAttribute('src') === next) return;
-        var apply2 = function () {
-          img.dataset.swapping = 'true';
-          setTimeout(function () {
-            img.src = next;
-            img.dataset.swapping = 'false';
-          }, 120);
-        };
-        var pre = new Image();
-        pre.onload = apply2;
-        pre.onerror = function () { img.src = next; };
-        pre.src = next;
-      });
+      /* The specimen renders are NOT swapped here. Both schemes are in the
+         markup and CSS picks one, so they change with the attribute above at
+         repaint speed. Doing it from JS meant a preload plus a 120ms timeout
+         per image, nine of them on the home page, each landing separately. */
       var meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', scheme === 'light' ? '#F5F8F9' : '#040200');
       try { localStorage.setItem('lamintra-theme', scheme); } catch (e) {}

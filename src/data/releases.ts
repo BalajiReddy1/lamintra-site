@@ -17,6 +17,13 @@ export interface Release {
 }
 
 export const cliReleases: Release[] = [
+  // The tag subject is "v0.6.0: ios-shell scaffold, registry v0.5.3". The
+  // leading version is dropped here and ONLY here, because the page already
+  // renders the version in its own column and would otherwise read
+  // "v0.6.0 - v0.6.0: ...". Noted rather than done quietly: the rule above is
+  // that summaries are verbatim, and the next tag should just not repeat its
+  // own version in the subject.
+  { version: 'v0.6.0', date: '2026-08-16', summary: 'ios-shell scaffold, registry v0.5.3' },
   { version: 'v0.5.0', date: '2026-08-06', summary: 'Wave 1: flat slugs, new base-tier language, retire the neon fixtures' },
   { version: 'v0.4.0', date: '2026-08-06', summary: 'Ship the rename: registry v0.4.0, CLI v0.4.0' },
   { version: 'v0.3.3', date: '2026-08-05', summary: 'Fix 11 token deviations; release CLI 0.3.3 against registry v0.3.2' },
@@ -29,19 +36,22 @@ export const cliReleases: Release[] = [
 ];
 
 /**
- * The registry the CLI is pinned to. Read out of `Installer.kt`, where
+ * The registry the CLI is pinned to. Read out of `Registry.kt`, where
  * REGISTRY_BASE points at a release TAG rather than at `main`, so an install
  * cannot be changed under a user by a push to the registry.
+ *
+ * (It lived in `Installer.kt` until 2026-08-16, when the transport moved so
+ * that `add` and `scaffold` could share it.)
  */
-export const currentCli = 'v0.5.0';
-export const pinnedRegistry = 'v0.5.2';
+export const currentCli = 'v0.6.0';
+export const pinnedRegistry = 'v0.5.3';
 
 /**
  * The downloaded file's real name, which is NOT `lamintra.jar`.
  *
  * `archiveVersion` in cli-kotlin/build.gradle.kts puts the version in the
  * filename, and release.yml uploads that file as-is, so what a visitor gets
- * from the release page is `lamintra-0.5.0.jar`. The site said
+ * from the release page is `lamintra-0.6.0.jar`. The site said
  * `java -jar lamintra.jar` in six hand-written places, so the first command
  * every new user copied failed with "Unable to access jarfile". The founder
  * hit it on the first real install test on 2026-08-11.

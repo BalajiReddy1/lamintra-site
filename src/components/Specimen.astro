@@ -1,0 +1,61 @@
+---
+/*
+  A component render, shipped in both schemes.
+
+  Both PNGs are in the markup and CSS shows one of them, so changing scheme is
+  a repaint rather than a network fetch.
+
+  It replaced a JS `src` swap that, for every specimen on the page, built a new
+  Image(), waited for its `onload`, and then waited a further 120ms before
+  assigning `src`. The home page carries nine of them, so a single toggle fired
+  nine independent round trips that each landed at their own moment and flipped
+  one image at a time. The 120ms was reserving room for a crossfade that was
+  never written: nothing in any stylesheet read the `data-swapping` attribute
+  it set, which is the same dead-hook mistake CHECKLIST.md section 7 already
+  records for `data-optional-narrow`.
+
+  The toggle was the visible half. The worse half was first paint: the inline
+  script in Base.astro resolves `prefers-color-scheme` BEFORE paint, so a
+  visitor whose OS is set to light got a light page immediately - while the
+  renders were still the `-dark.png` the server had written, and stayed dark
+  until the bottom script ran, preloaded each replacement and waited its 120ms.
+  Every light-OS visitor saw that on every page load, not only on a toggle.
+
+  Verified 2026-08-16 with the stored choice cleared and the OS set to light:
+  page and renders now both come up light, all images already loaded.
+
+  Both schemes load eagerly, which is about 128KB more than shipping one. That
+  is the cost of the toggle being instant, it is measured against a page that
+  already streams a 3.8MB wasm bundle in the background, and these are the
+  proof assets rather than decoration.
+*/
+interface Props {
+  slug: string;
+  width: number;
+  height: number;
+  alt: string;
+  style?: string;
+  /* Dark is the default scheme, so only the dark render is worth prioritising
+     for the first paint. */
+  priority?: boolean;
+}
+
+const { slug, width, height, alt, style, priority = false } = Astro.props;
+---
+<img
+  data-specimen-scheme="dark"
+  src={`/img/${slug}-dark.png`}
+  width={width}
+  height={height}
+  style={style}
+  alt={alt}
+  fetchpriority={priority ? 'high' : undefined}
+/>
+<img
+  data-specimen-scheme="light"
+  src={`/img/${slug}-light.png`}
+  width={width}
+  height={height}
+  style={style}
+  alt={alt}
+/>

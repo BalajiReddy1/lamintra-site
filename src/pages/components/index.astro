@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Specimen from '../../components/Specimen.astro';
 import { components, installableCount } from '../../data/registry';
 
 const count = components.length;
@@ -24,12 +25,10 @@ const count = components.length;
         <li>
           <a class="component-card" href={`/components/${c.slug}/`}>
             <span class="component-card__art">
-              <img
-                data-specimen={c.slug}
-                src={`/img/${c.slug}-dark.png`}
+              <Specimen
+                slug={c.slug}
                 width={c.renderWidth}
                 height={c.renderHeight}
-                loading="lazy"
                 alt={`The Lamintra ${c.name.toLowerCase()}, rendered from the registry source the CLI installs.`}
               />
             </span>

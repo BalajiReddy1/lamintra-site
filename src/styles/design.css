@@ -704,6 +704,21 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 }
 .component-card:hover { border-color: var(--line-strong); background: var(--bg-raised); }
 
+/* Specimen renders. Both schemes ship in the markup and these three rules pick
+   one, so changing scheme is a repaint and not nine image fetches each landing
+   at its own moment. See src/components/Specimen.astro for what this replaced.
+
+   `block` rather than `revert` because it is what all three call sites already
+   compute to: every specimen is either a grid item or absolutely positioned,
+   and both of those blockify an inline element. Writing it explicitly keeps the
+   two images interchangeable no matter which context they land in.
+
+   Dark is the default, matching the palette, so the light render is the one
+   hidden when no `data-theme` is set at all. */
+[data-specimen-scheme="light"] { display: none; }
+:root[data-theme="light"] [data-specimen-scheme="dark"] { display: none; }
+:root[data-theme="light"] [data-specimen-scheme="light"] { display: block; }
+
 /* A FIXED aspect, not a min-height. Every render has its own proportions -
    the switch is 380x100 and the button is 380x300 - so a min-height let each
    art pane size itself and the six card titles landed at six different
