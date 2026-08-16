@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { components } from '../data/registry';
+
+/**
+ * Cloudflare Pages serves this file, with a real 404 status, for any path that
+ * matches no other route.
+ *
+ * Without it Pages falls back to index.html AND returns 200, which is worse
+ * than having no 404 page at all: a typo'd link renders the home page and
+ * reports success, so a crawler indexes infinite duplicate URLs and a reader
+ * never learns the address was wrong. Verified before this file existed -
+ * /no-such-page returned 200 with the full home page body.
+ *
+ * It lists the components rather than offering a search box, because a wrong
+ * URL here is almost always a component slug that was guessed or has been
+ * renamed, and the whole registry fits on the screen.
+ */
+const sorted = [...components].sort((a, b) => a.slug.localeCompare(b.slug));
+---
+<Base
+  title="Page not found - Lamintra"
+  description="That address does not exist on this site."
+  section=""
+>
+  <article class="shell section prose">
+    <header class="doc-head">
+      <h1>That page does not exist.</h1>
+      <p class="section__lede">
+        The address is wrong, or it used to work and does not any more. Nothing
+        on this site is behind a login, so there is no third possibility.
+      </p>
+    </header>
+
+    <section class="doc-block">
+      <h2>Where you probably meant to go</h2>
+      <ul class="plain-list">
+        <li><a href="/">The home page</a></li>
+        <li><a href="/components/">All {components.length} components</a></li>
+        <li><a href="/install/">Install</a>, which is the two commands</li>
+        <li><a href="/changelog/">Changelog</a>, including what has been retired</li>
+      </ul>
+    </section>
+
+    <section class="doc-block">
+      <h2>Every component, by slug</h2>
+      <p>
+        A component page is <code>/components/&lt;slug&gt;/</code>, and the slug
+        is what you pass to <code>add</code>.
+      </p>
+      <ul class="plain-list">
+        {sorted.map((c) => (
+          <li><a href={`/components/${c.slug}/`}><code>{c.slug}</code></a> - {c.name}</li>
+        ))}
+      </ul>
+      <p class="doc-note">
+        Retired components keep their entry in the{' '}
+        <a href="/changelog/">changelog</a> rather than disappearing, so a slug
+        that used to exist is still explained somewhere.
+      </p>
+    </section>
+  </article>
+</Base>

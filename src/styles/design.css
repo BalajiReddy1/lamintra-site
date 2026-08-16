@@ -1077,6 +1077,19 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 .prose code { color: var(--ink); }
 .prose a { color: var(--ink); }
 
+/* A plain prose list. The reset at the top strips every ul to zero margin and
+   zero padding, and nothing put it back, so a bare <ul> in prose renders as
+   run-together lines with no markers. Added for the 404 page, which is the
+   first page whose whole job is a list of links, and available to any page
+   that needs one rather than being scoped to that page. */
+.plain-list {
+  list-style: disc;
+  padding-inline-start: 1.25em;
+  margin-block-start: var(--space-m);
+  color: var(--ink-muted);
+}
+.plain-list li + li { margin-block-start: var(--space-xs); }
+
 .releases { list-style: none; }
 .release { padding-block: var(--space-m); border-block-end: 1px solid var(--line); }
 .release:last-child { border-block-end: 0; }

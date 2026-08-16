@@ -42,6 +42,15 @@
 # HTML gets Cloudflare's own default for a Pages project, which is already
 # max-age=0, must-revalidate. Verified on the deploy after this one.
 /*
+  # HSTS. Cloudflare terminates TLS but does not send this for a Pages project
+  # unless asked - verified by reading the live response headers, where it was
+  # simply absent. Without it, a visitor who types the bare hostname makes one
+  # plaintext request before the redirect, every time, on every new device.
+  #
+  # Two years, subdomains included. No `preload` token: preloading is a
+  # browser-list submission that is slow to undo, and it should be a deliberate
+  # decision once the domain has been stable for longer than a week.
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
