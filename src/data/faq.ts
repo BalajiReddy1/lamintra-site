@@ -9,7 +9,14 @@
  *
  * The page and the structured data now render from these strings, so they
  * cannot disagree. Do not reintroduce a second copy to "format it nicer".
+ *
+ * The component count is interpolated for exactly the same reason, and this
+ * file got it wrong anyway: it said "six components today" while the site said
+ * eight, on a page whose whole argument is that its claims are checkable. A
+ * count typed into prose is a count that goes stale the next time one ships.
  */
+import { components } from './registry';
+
 export interface Faq {
   question: string;
   answer: string;
@@ -29,12 +36,12 @@ export const faqs: Faq[] = [
   {
     question: 'Does it work on iOS, really?',
     answer:
-      'Every component compiles for Android, iOS, desktop and wasm, and the interaction tests run on a real iOS simulator in CI, not just on the JVM. Nothing uses a platform-specific drawing API, which is why the switch shadow is drawn as fading strokes rather than Modifier.shadow, whose coloured variants are Android only. What is not verified on iOS is appearance. Composition and behaviour are tested; nobody has photographed them on a device.',
+      'Every component compiles for Android, iOS, desktop and web, and the interaction tests run on a real iOS simulator in CI, not just on a desktop machine. Nothing uses a platform-specific drawing API, which is why the switch shadow is drawn as fading strokes rather than Modifier.shadow, whose coloured variants are Android only. What is not verified on iOS is appearance. Composition and behaviour are tested; nobody has photographed them on a device.',
   },
   {
     question: 'Is it free, and what is the catch?',
     answer:
-      'Free, no paid tier, no account, no telemetry. Released under the MIT licence, so what you install is yours to ship commercially and to keep whatever happens upstream. The honest catch is the size of the library. There are six components today, and the next ones get chosen by whoever asks first.',
+      `Free, no account, nothing tracked. Released under the MIT licence, so what you install is yours to ship commercially and to keep whatever happens upstream. The honest catch is the size of the library: there are ${components.length} components today, and the next ones get chosen by whoever asks first.`,
   },
 ];
 

@@ -703,6 +703,13 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 .proof ul {
   display: flex;
   flex-wrap: wrap;
+  /* Centred, and it is a bug fix rather than a preference. The two links below
+     carry `min-height: 44px` for the touch target and centre their own text
+     inside it; the three plain-text items have no such box. Under the flex
+     default of `stretch` every item stretched to the tallest, but only the
+     links centred their text within it - so "CLI" and "Registry" sat visibly
+     lower than "8 components" on the same row. */
+  align-items: center;
   gap: var(--space-xs) var(--space-xl);
   list-style: none;
   font-size: var(--step--1);
@@ -1189,4 +1196,16 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 .faq[open] summary::before { transform: rotate(45deg); }
 .faq summary:hover::before { border-color: var(--ink); }
 .faq > div { padding-block: 0 var(--space-m); }
-.faq p { max-width: 68ch; color: var(--ink-muted); }
+/* The answer fills the same width as the question above it.
+
+   Two rules were capping it and only one was local: `.faq p` set 68ch, and the
+   GLOBAL `p, li { max-width: 72ch }` near the top of this file set the rest.
+   Removing the local one changed nothing measurable, which is the giveaway
+   that the cascade was being read wrong. `none` here is what actually does it.
+
+   The global cap exists for a real reason - the old page shipped a 112
+   character line - so this is a deliberate exception rather than a
+   disagreement with it. An open accordion answer is two to four sentences
+   being scanned, not long-form prose being read, and an answer wrapping at
+   half the width of its own divider read as a column left unfinished. */
+.faq p { max-width: none; color: var(--ink-muted); }
