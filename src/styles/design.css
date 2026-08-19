@@ -397,6 +397,13 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
   border-radius: var(--r-full);
   background: transparent;
   color: var(--ink-faint);
+  /* The label became an icon on 2026-08-17, so the box has to centre a glyph
+     rather than sit a baseline. min-width keeps the two halves equal: a moon
+     and a sun are not the same width, and without it the track jogged as the
+     thumb moved between them. */
+  display: grid;
+  place-items: center;
+  min-width: 44px;
   font: inherit;
   font-size: var(--step--1);
   font-weight: 500;

@@ -187,8 +187,30 @@ const nav = [
       <a href="https://github.com/BalajiReddy1/lamintra" data-optional-narrow>GitHub</a>
     </nav>
     <div class="scheme" role="group" aria-label="Colour scheme">
-      <button type="button" data-scheme="dark" aria-pressed="true">Dark</button>
-      <button type="button" data-scheme="light" aria-pressed="false">Light</button>
+      {/* Icons, not the words "Dark" and "Light", since 2026-08-17. Two
+          reasons. The label was redundant - the control is a two-state track
+          and the pressed half already says which one you are in - and a page
+          whose every affordance is a word reads as a document rather than a
+          product. Inline SVG rather than an icon font or a sprite: two glyphs
+          do not earn a request, and this keeps the one-third-party-origin rule
+          intact.
+
+          currentColor throughout, so they follow the pressed and unpressed ink
+          without a second colour rule. aria-label carries the name the visible
+          text used to, so nothing is lost to a screen reader. */}
+      <button type="button" data-scheme="dark" aria-pressed="true" aria-label="Dark">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 13.5A8.2 8.2 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5Z"/>
+        </svg>
+      </button>
+      <button type="button" data-scheme="light" aria-pressed="false" aria-label="Light">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"/>
+          <path d="M12 2.4v2.3M12 19.3v2.3M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.4 12h2.3M19.3 12h2.3M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/>
+        </svg>
+      </button>
     </div>
   </div>
 </header>
@@ -197,18 +219,28 @@ const nav = [
   <slot />
 </main>
 
-{/* One row, six links.
+{/* One row: a copyright line and six links.
 
     It was two rows with an empty <p> between them: the paragraph held the MIT
     line until that was cut on 2026-08-16 and the empty element was left,
     which is what pushed the first nav to the right and forced a second row for
     the legal links. Two rows and a gap for six words.
 
+    The <p> carries text again as of 2026-08-16, which is safe now only because
+    the `margin-inline-start: auto` that caused that bug is gone. It needs no
+    CSS of its own: `p` has no margin, .colophon sets the size and colour, and
+    72ch cannot bind on five words.
+
+    "MIT licensed" rather than "all rights reserved", which would contradict
+    /terms/. Both facts are true and both belong here: the copyright is held,
+    and it is licensed permissively.
+
     Still two <nav> elements rather than one, because they are labelled
     differently and a screen reader announcing "Legal" is doing real work. They
     just share a line now. */}
 <footer class="colophon">
   <div class="shell">
+    <p>&copy; 2026 Lamintra. MIT licensed.</p>
     <nav aria-label="Footer">
       <a href="https://github.com/BalajiReddy1/lamintra">Source</a>
       <a href="https://github.com/BalajiReddy1/lamintra-registry">Registry</a>

@@ -28,6 +28,23 @@ const scaffoldOutput = `$ ${jarCommand('scaffold ios-shell')}
   wrote: iosApp/iosApp/ComposeScreen.swift
   wrote: composeApp/src/iosMain/kotlin/.../ui/shell/ShellEntry.kt
   wrote: composeApp/src/commonMain/kotlin/.../ui/shell/ShellRoutes.kt`;
+
+/**
+ * The alias, added 2026-08-17 because every command on this page begins with
+ * `java -jar` and nobody types that twice.
+ *
+ * The evidence is not a guess. The founder, who wrote the tool, typed a bare
+ * `lamintra add button` on the first real install and got "not recognized",
+ * and copied the jar into the project root because the commands here are all
+ * relative. If the author's fingers do both, a stranger's will.
+ *
+ * `tools/` rather than a real directory, for the same reason the file tree
+ * says `yourorg/yourapp`: it reads as a slot rather than as a claim about
+ * where anyone keeps things.
+ */
+const aliasCmd = `doskey lamintra=java -jar C:\\tools\\${jarFile} $*`;
+const aliasPwsh = `function lamintra { java -jar C:\\tools\\${jarFile} @args }`;
+const aliasSh = `alias lamintra='java -jar ~/tools/${jarFile}'`;
 ---
 <Base
   title="Install Lamintra for Compose Multiplatform"
@@ -56,6 +73,33 @@ const scaffoldOutput = `$ ${jarCommand('scaffold ios-shell')}
         <a href="https://github.com/BalajiReddy1/lamintra/releases/latest">
           Download <code>{jarFile}</code> from the latest release
         </a>{' '}({currentCli}). It is the only thing you download.
+      </p>
+    </section>
+
+    <section class="doc-block">
+      <h2>Typing it less</h2>
+      <p>
+        Every command below is written as <code>java -jar {jarFile}</code>, which
+        assumes the jar is in the directory you are standing in. It does not have
+        to be: a full path works anywhere, and quoting it matters on Windows
+        because an unquoted path can be read as a redirect.
+      </p>
+      <div class="source"><Code code={`java -jar "C:\\tools\\${jarFile}" init`} lang="text" {...shiki} /></div>
+      <p>
+        There is no <code>lamintra</code> on your PATH, because the tool is a jar
+        rather than an installed binary. If you would rather type one, alias it
+        once. Pick your shell:
+      </p>
+      <div class="source"><Code code={aliasCmd} lang="text" {...shiki} /></div>
+      <div class="source"><Code code={aliasPwsh} lang="text" {...shiki} /></div>
+      <div class="source"><Code code={aliasSh} lang="text" {...shiki} /></div>
+      <p class="doc-note">
+        The first is <code>cmd</code>, the second PowerShell, the third bash or
+        zsh. All three last for the session only. To keep one, put the{' '}
+        <code>doskey</code> line in a startup script, the function in your{' '}
+        <code>$PROFILE</code>, or the alias in <code>~/.bashrc</code> or{' '}
+        <code>~/.zshrc</code>. Every command on this page then works with{' '}
+        <code>lamintra</code> in front instead of <code>java -jar</code>.
       </p>
     </section>
 
