@@ -340,6 +340,39 @@ const nav = [
       requestAnimationFrame(function () { requestAnimationFrame(showHero); });
       setTimeout(showHero, 120);
     }
+
+    /* Decode the renders the reader cannot currently see.
+
+       Both schemes ship in the markup and CSS picks one, which made the swap a
+       repaint rather than nine network requests - that was the 2026-08-16 fix
+       and it stands. What it did not fix is that a browser does not DECODE a
+       `display: none` image. Nine of the eighteen on this page are therefore
+       compressed bytes in memory and nothing else, and the first toggle away
+       from the scheme you arrived in has to decode all nine on the main thread
+       before it can paint.
+
+       That is why the delay was asymmetric, which is the clue that found it:
+       light to dark was slow and dark to light was not, for a reader whose page
+       had loaded light. Whichever set you land on is decoded; the other is not,
+       until you ask for it.
+
+       `decode()` exists for exactly this and works on a hidden image, since it
+       needs only a src. At idle, so it never competes with first paint, and
+       every failure is swallowed - this is an optimisation, and a browser
+       without `decode()` gets precisely the behaviour it has today.
+
+       Measured wrong once: 34ms, in a pane that produces no frames, which made
+       decode look free when it was simply never happening. */
+    var warmRenders = function () {
+      document.querySelectorAll('img[data-specimen-scheme]').forEach(function (img) {
+        if (img.decode) { img.decode().catch(function () {}); }
+      });
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(warmRenders, { timeout: 3000 });
+    } else {
+      setTimeout(warmRenders, 1200);
+    }
   })();
 </script>
 </body>
