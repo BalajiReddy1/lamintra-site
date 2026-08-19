@@ -23,6 +23,12 @@ export const cliReleases: Release[] = [
   // "v0.6.0 - v0.6.0: ...". Noted rather than done quietly: the rule above is
   // that summaries are verbatim, and the next tag should just not repeat its
   // own version in the subject.
+  // Trimmed the same way v0.6.0 below is, and for the same reason: the tag
+  // subject was "Pin to registry v0.8.0 and cut 0.9.0", and the page already
+  // renders the version in its own column, so the trailing clause would have
+  // read "v0.9.0 - ... and cut 0.9.0". The rule above still stands and the next
+  // tag should simply not name its own version.
+  { version: 'v0.9.0', date: '2026-08-19', summary: 'Pin to registry v0.8.0' },
   { version: 'v0.8.0', date: '2026-08-16', summary: 'swipe-row, registry v0.7.0' },
   { version: 'v0.7.0', date: '2026-08-16', summary: 'sheet, registry v0.6.0' },
   { version: 'v0.6.1', date: '2026-08-16', summary: 'registry v0.5.4, ios-shell without material3' },
@@ -46,8 +52,8 @@ export const cliReleases: Release[] = [
  * (It lived in `Installer.kt` until 2026-08-16, when the transport moved so
  * that `add` and `scaffold` could share it.)
  */
-export const currentCli = 'v0.8.0';
-export const pinnedRegistry = 'v0.7.0';
+export const currentCli = 'v0.9.0';
+export const pinnedRegistry = 'v0.8.0';
 
 /**
  * The downloaded file's real name, which is NOT `lamintra.jar`.
