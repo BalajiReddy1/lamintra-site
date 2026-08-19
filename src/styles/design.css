@@ -893,10 +893,22 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
    -------------------------------------------------------------------------- */
 
 .section__head { margin-block-end: var(--space-xl); }
+/* The step between a 42px heading and 16px body, added 2026-08-19.
+   It set margin, measure and colour and no size, so it rendered at exactly body
+   size and did no work: every page went from display type straight to body with
+   nothing in between, which is what made them read as documents rather than as
+   designed pages. --step-1 was in the scale and unused; this is the job it was
+   for.
+
+   1.5 rather than the 1.65 body carries, because leading that suits 16px is
+   loose at 20px - the larger the type, the less air a line needs. 60ch stays:
+   `ch` scales with font-size, so the measure is still sixty characters. */
 .section__lede {
   margin-block-start: var(--space-s);
   max-width: 60ch;
   color: var(--ink-muted);
+  font-size: var(--step-1);
+  line-height: 1.5;
 }
 
 /* --------------------------------------------------------------------------
