@@ -481,10 +481,20 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
   .masthead nav {
     order: 1;
     flex-basis: 100%;
-    margin-inline-start: 0;
-    /* Spread rather than packed: three links across 333px leaves the targets
-       wider than their text, not narrower. */
-    justify-content: space-between;
+    /* `margin-inline-end`, because the desktop rule became end-auto on
+       2026-08-19 when the nav moved to the left of the row. This reset still
+       said `start` for a few hours afterwards and was neutralising a margin
+       that no longer existed. */
+    margin-inline-end: 0;
+    /* Packed left, not spread. `space-between` was chosen when this row was
+       the only thing on the phone header and the reasoning was tap-target
+       width, which does not survive the row above it gaining a version chip:
+       three links flung to the screen edges read as disconnected from the
+       brand they belong to, and the second row stopped looking like part of
+       the same header. Targets are still 44 tall and text plus 12 each side
+       wide, which is the size that actually matters. */
+    justify-content: flex-start;
+    gap: var(--space-2xs);
   }
   .scheme { margin-inline-start: auto; }
   /* What the attribute in Base.astro was always for, and nothing is lost:
