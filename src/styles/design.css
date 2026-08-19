@@ -341,7 +341,13 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: var(--bg);
+  /* Translucent over a blur rather than an opaque bar. Content passing under a
+     sticky header should be visible as it goes, or the header reads as a lid.
+     The fallback is the solid colour on the line below, which every browser
+     without backdrop-filter gets and which is what shipped before. */
+  background: color-mix(in oklab, var(--bg) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-block-end: 1px solid transparent;
   transition: border-color var(--dur-surface) var(--ease);
 }
@@ -366,11 +372,15 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 }
 .wordmark span { color: var(--ink-faint); font-weight: 500; }
 
+/* The nav sits after the wordmark and pushes everything else right, rather
+   than being pushed right itself. Changed 2026-08-19: destinations belong next
+   to the name they belong to, and the right edge is for state - which version,
+   which scheme - not for navigation. */
 .masthead nav {
   display: flex;
   align-items: center;
   gap: var(--space-2xs);
-  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 .masthead nav a {
   display: inline-flex;
@@ -484,35 +494,13 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 
 /* --------------------------------------------------------------------------
    11. Footer
-   -------------------------------------------------------------------------- */
 
-.colophon {
-  margin-block-start: var(--space-3xl);
-  border-block-start: 1px solid var(--line);
-  padding-block: var(--space-xl);
-  font-size: var(--step--1);
-  color: var(--ink-faint);
-}
-.colophon .shell { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-xl); align-items: center; }
-/* No `margin-inline-start: auto`. It existed to push a single nav away from the
-   colophon text beside it; with that text gone it shoved both navs against the
-   right edge and left the row two thirds empty. They read left to right now,
-   and wrap onto a second line only when the viewport genuinely cannot hold six
-   links. */
-.colophon nav { display: flex; flex-wrap: wrap; gap: var(--space-m); }
-.colophon nav a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding-inline: var(--space-s);
-  border-radius: var(--r-full);
-  color: var(--ink-muted);
-  text-decoration: none;
-}
-.colophon nav a:hover {
-  color: var(--ink);
-  background: color-mix(in oklab, var(--ink) 8%, transparent);
-}
+   The one-row version lived here until 2026-08-19: a copyright line and six
+   pill links, all the same weight. Its rules are gone rather than overridden -
+   `.colophon .shell` in particular still matched the rebuilt inner div, which
+   carries `shell` for its width, and would have fought the grid from two
+   sections away. The replacement is under section 12.
+   -------------------------------------------------------------------------- */
 
 /* The lit top edge, dark only. Added 2026-08-19, and it is the same mechanism
    the registry's card and sheet use: a hairline along the top, brighter than
@@ -530,6 +518,83 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 :root:not([data-theme="light"]) .pop {
   box-shadow: inset 0 1px 0 rgba(250, 250, 250, 0.055);
 }
+
+
+/* The mark, shared by the masthead and the footer. `flex: none` because an SVG
+   in a flex row is otherwise squashed before the text it sits beside is. */
+.wordmark .mark,
+.colophon__mark .mark { flex: none; margin-inline-end: 0.5em; }
+
+/* The version chip. A link rather than a label: it says which version, and the
+   only useful thing to do with that is read what changed. */
+.version {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding-inline: var(--space-s);
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.version:hover { color: var(--ink); border-color: var(--line-strong); }
+
+/* --------------------------------------------------------------------------
+   The footer, rebuilt 2026-08-19
+
+   It was one row: a copyright line and six links, all the same weight. That is
+   a legal notice, not a colophon. This is a brand block and its machine facts
+   on one side, destinations in columns on the other - the shape a footer has
+   when it is designed rather than appended.
+
+   It carries its own surface and a top border, so the page ends rather than
+   stopping. --bg-sunk in both schemes: darker than the page in light, lighter
+   in dark, and a distinct band either way.
+   -------------------------------------------------------------------------- */
+.colophon {
+  margin-block-start: var(--space-3xl);
+  border-block-start: 1px solid var(--line);
+  background: var(--bg-sunk);
+  padding-block: var(--space-xl) var(--space-2xl);
+  font-size: var(--step--1);
+}
+.colophon__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl) var(--space-3xl);
+  justify-content: space-between;
+}
+.colophon__mark {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--ink);
+}
+.colophon__meta {
+  margin-block-start: var(--space-xs);
+  color: var(--ink-faint);
+}
+.colophon__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xl);
+}
+.colophon__links {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+}
+.colophon__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+.colophon__links a:hover { color: var(--ink); }
 
 /* --------------------------------------------------------------------------
    12. Surfaces

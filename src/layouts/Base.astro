@@ -20,7 +20,7 @@ interface Props {
   schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-import { jarCommand } from '../data/releases';
+import { jarCommand, currentCli } from '../data/releases';
 import '../styles/fonts.css';
 import '../styles/design.css';
 
@@ -176,7 +176,12 @@ const nav = [
 
 <header class="masthead" id="masthead">
   <div class="shell masthead__inner">
-    <a class="wordmark" href="/">Lamintra</a>
+    {/* A mark, not just a word. Added 2026-08-19: every affordance on this
+        page was text, which is what made it read as a document. Inline SVG on
+        currentColor, so it follows the wordmark's ink in both schemes without
+        a second rule. It is a component: a surface with a bar across the top,
+        which is what this site sells. */}
+    <a class="wordmark" href="/"><svg class="mark" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><rect x="1.4" y="1.4" width="13.2" height="13.2" rx="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3.9" y="3.9" width="8.2" height="2.4" rx="1.2" fill="currentColor"/></svg>Lamintra</a>
     <nav aria-label="Primary">
       {nav.map((item) => (
         <a
@@ -186,6 +191,11 @@ const nav = [
       ))}
       <a href="https://github.com/BalajiReddy1/lamintra" data-optional-narrow>GitHub</a>
     </nav>
+    {/* The version, in the chrome rather than buried on the changelog. A
+        library with no visible version reads as unmaintained, which is the one
+        objection this category actually has. Derived from `currentCli`, so it
+        cannot drift from the jar the install page links to. */}
+    <a class="version" href="/changelog/">{currentCli}</a>
     <div class="scheme" role="group" aria-label="Colour scheme">
       {/* Icons, not the words "Dark" and "Light", since 2026-08-17. Two
           reasons. The label was redundant - the control is a two-state track
@@ -239,18 +249,34 @@ const nav = [
     differently and a screen reader announcing "Legal" is doing real work. They
     just share a line now. */}
 <footer class="colophon">
-  <div class="shell">
-    <p>&copy; 2026 Lamintra. MIT licensed.</p>
-    <nav aria-label="Footer">
-      <a href="https://github.com/BalajiReddy1/lamintra">Source</a>
-      <a href="https://github.com/BalajiReddy1/lamintra-registry">Registry</a>
-      <a href="https://github.com/BalajiReddy1/lamintra/releases/latest">Releases</a>
-    </nav>
-    <nav aria-label="Legal">
-      <a href="/privacy/">Privacy</a>
-      <a href="/terms/">Terms</a>
-      <a href="/compliance/">Compliance</a>
-    </nav>
+  <div class="shell colophon__inner">
+    <div class="colophon__brand">
+      <span class="colophon__mark"><svg class="mark" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><rect x="1.4" y="1.4" width="13.2" height="13.2" rx="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3.9" y="3.9" width="8.2" height="2.4" rx="1.2" fill="currentColor"/></svg>Lamintra</span>
+      {/* The line that was here before the layout changed, unchanged. The
+          reference design carried two lines of build metadata in this slot and
+          they were copied across with it on 2026-08-19, which invented content
+          nobody asked for and dropped this one. The layout was the thing worth
+          taking; what goes in it is this site's own decision.
+
+          "MIT licensed" and not "all rights reserved", which would contradict
+          /terms/. */}
+      <p class="colophon__meta">&copy; 2026 Lamintra. MIT licensed.</p>
+    </div>
+    <div class="colophon__nav">
+      {/* Two navs rather than one list: they are labelled differently and a
+          screen reader announcing "Legal" is doing real work. The six links are
+          the six that were here; the layout moved, the destinations did not. */}
+      <nav class="colophon__links" aria-label="Footer">
+        <a href="https://github.com/BalajiReddy1/lamintra">Source</a>
+        <a href="https://github.com/BalajiReddy1/lamintra-registry">Registry</a>
+        <a href="https://github.com/BalajiReddy1/lamintra/releases/latest">Releases</a>
+      </nav>
+      <nav class="colophon__links" aria-label="Legal">
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="/compliance/">Compliance</a>
+      </nav>
+    </div>
   </div>
 </footer>
 
