@@ -46,32 +46,65 @@
    inside a media query, and this repo has been bitten every time a value
    existed twice. With JS the preference is read before first paint. */
 :root:not([data-theme="light"]) {
-  --bg:            #040200;   /* page, and the floor of the ramp */
-  --bg-sunk:       #0D0A05;   /* code blocks, the command bar */
-  --bg-panel:      #14100A;   /* cards, sidebar, prop tables */
-  --bg-raised:     #1E1911;   /* popovers, hover, the active nav item */
-  --bg-well:       #0a0a0b;   /* behind component renders. NOT part of the ramp:
-                                 it matches the components' own dark surface so
-                                 a specimen's edge disappears into its frame.
-                                 It survived the last palette change untouched
-                                 and should survive the next one. */
+  /* NEUTRAL, and identical to the registry's own dark ladder. Rebuilt
+     2026-08-19.
 
-  --line:          #29251E;   /* dividers */
-  --line-strong:   #45403699; /* interactive borders, inputs */
+     It was warm: #040200 page, #14100A and #1E1911 panels, which are browns.
+     The components have always been neutral, so a screen showed three colour
+     temperatures at once - neutral renders, inside a neutral well, inside brown
+     panels, on a warm-black page. The old `--bg-well` comment is the evidence:
+     it carved the well OUT of the ramp specifically so a specimen's edge would
+     not disappear into a frame of a different hue. That was a patch over the
+     mismatch rather than a fix, and with the page neutral the exception
+     dissolves - the well is now simply --bg.
 
-  --ink:           #F8F5F2;   /* primary text, filled buttons */
-  --ink-muted:     #A6A4A1;   /* body */
-  --ink-faint:     #84827E;   /* labels, captions, table headers */
+     The values are the registry's, not approximations of them: #09090B is
+     Neutral950, #1C1C20 is Neutral900, #28282F is Neutral850. A card on the
+     site and a card the CLI installs are now the same colour, which is the
+     claim this whole site makes. */
+  --bg:            #09090B;   /* page, and the floor of the ramp. Neutral950 */
+  --bg-sunk:       #0F0F13;   /* code blocks, the command bar */
+  --bg-panel:      #1C1C20;   /* cards, sidebar, prop tables. Neutral900 */
+  --bg-raised:     #28282F;   /* popovers, hover, the active nav item. Neutral850 */
+  --bg-well:       #09090B;   /* behind component renders. No longer an exception:
+                                 the page and the components share a hue now, so
+                                 this is --bg and a specimen's edge meets a frame
+                                 of its own colour by construction rather than by
+                                 a carve-out. */
 
-  --accent:        #C8FF34;   /* state only, never a foreground on the page */
-  --on-accent:     #040200;
+  --line:          #26262A;   /* dividers. Neutral800, the registry's hairline */
+  --line-strong:   #3A3A4299; /* interactive borders, inputs */
+
+  /* Neutral, for the same reason as the surfaces. These were warm whites and
+     warm greys, which is what made white component renders look faintly blue
+     against the page next to them. Contrast is measured after this change, not
+     assumed: --ink-faint is the one that lands closest to the AA floor. */
+  --ink:           #FAFAFA;   /* primary text, filled buttons. Neutral50 */
+  --ink-muted:     #A1A1AA;   /* body */
+  --ink-faint:     #8A8A94;   /* labels, captions, table headers */
+
+  /* Monochrome since 2026-08-19, matching the registry. This was an acid lime,
+     and it was the only saturated colour on either the site or the components -
+     which read as a brand colour arrived at by accident rather than chosen. It
+     is state only, so going to ink costs nothing: a white focus ring and a white
+     selection are both stronger than a lime one on this ground. */
+  --accent:        #FAFAFA;   /* state only, never a foreground on the page */
+  --on-accent:     #09090B;   /* follows --bg off the warm black */
 
   --danger:        #F04438;
 
-  /* Lighting, not decoration: one hue moving only in lightness. #040200 to
-     #14100A gives 16 distinct 8-bit steps, which is the minimum that does not
-     band; #0D0A05 gives 9 and shows visible banding every 88px. */
-  --lift: radial-gradient(ellipse 1400px 900px at 50% -10%, #14100A 0%, #04020000 70%);
+  /* Lighting, not decoration: one hue moving only in lightness. The rule that
+     set the old values still governs - the ramp needs at least 16 distinct
+     8-bit steps or it bands visibly, and #0D0A05 gave 9 - so the neutral pair
+     was checked against it rather than swapped by eye. #09090B to #1C1C20 is 19
+     steps on red and green and 21 on blue, comfortably clear.
+
+     It was #14100A over #04020000, a warm brown, and it survived the palette
+     going neutral by three minutes: the ramp changed and the light over it did
+     not, which left a brown glow on a neutral page. Found by grepping the old
+     values rather than by looking, which would not have caught it at this
+     opacity. */
+  --lift: radial-gradient(ellipse 1400px 900px at 50% -10%, #1C1C20 0%, #09090B00 70%);
 
   /* Light type on a dark ground reads lighter than it is and needs more room. */
   --leading-body: 1.65;
@@ -352,12 +385,12 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
   transition: color var(--dur-state) var(--ease), background-color var(--dur-state) var(--ease);
 }
 /* A translucent wash of the ink, NOT a surface token.
-   --bg-panel and --bg-raised are warm browns (#14100A, #1E1911). As a page
-   they are right, and as a small pill behind white text at 1440 they read as a
-   muddy brown patch rather than a highlight - the hue is doing something the
-   surrounding black does not, at the one size where it has no room to. Mixing
-   the ink instead keeps the pill exactly the page's own hue and works in both
-   schemes from one declaration. */
+   The original reason was hue: --bg-panel and --bg-raised were warm browns, and
+   a brown pill behind white text at 1440 read as a muddy patch rather than a
+   highlight. Those are neutral now, so that specific argument has expired - but
+   the technique stays, because mixing the ink keeps the pill exactly the page's
+   own value at any surface it lands on and works in both schemes from one
+   declaration, which a fixed token cannot. */
 .masthead nav a:hover {
   color: var(--ink);
   background: color-mix(in oklab, var(--ink) 8%, transparent);
@@ -479,6 +512,23 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
 .colophon nav a:hover {
   color: var(--ink);
   background: color-mix(in oklab, var(--ink) 8%, transparent);
+}
+
+/* The lit top edge, dark only. Added 2026-08-19, and it is the same mechanism
+   the registry's card and sheet use: a hairline along the top, brighter than
+   the fill, which the eye reads as a lamp above the object.
+
+   NOT a shadow. A drop shadow is black and black on #09090B is invisible, which
+   is why the light scheme already looked lifted and the dark one did not. An
+   inset box-shadow costs no layout and no extra element.
+
+   Guarded to the dark scheme: in light the surfaces are white on near-white and
+   a top highlight there would be both invisible and wrong, since light gets its
+   depth from a real shadow instead. */
+:root:not([data-theme="light"]) .panel,
+:root:not([data-theme="light"]) .well,
+:root:not([data-theme="light"]) .pop {
+  box-shadow: inset 0 1px 0 rgba(250, 250, 250, 0.055);
 }
 
 /* --------------------------------------------------------------------------
