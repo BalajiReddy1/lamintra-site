@@ -77,33 +77,6 @@ const aliasSh = `alias lamintra='java -jar ~/tools/${jarFile}'`;
     </section>
 
     <section class="doc-block">
-      <h2>Typing it less</h2>
-      <p>
-        Every command below is written as <code>java -jar {jarFile}</code>, which
-        assumes the jar is in the directory you are standing in. It does not have
-        to be: a full path works anywhere, and quoting it matters on Windows
-        because an unquoted path can be read as a redirect.
-      </p>
-      <div class="source"><Code code={`java -jar "C:\\tools\\${jarFile}" init`} lang="text" {...shiki} /></div>
-      <p>
-        There is no <code>lamintra</code> on your PATH, because the tool is a jar
-        rather than an installed binary. If you would rather type one, alias it
-        once. Pick your shell:
-      </p>
-      <div class="source"><Code code={aliasCmd} lang="text" {...shiki} /></div>
-      <div class="source"><Code code={aliasPwsh} lang="text" {...shiki} /></div>
-      <div class="source"><Code code={aliasSh} lang="text" {...shiki} /></div>
-      <p class="doc-note">
-        The first is <code>cmd</code>, the second PowerShell, the third bash or
-        zsh. All three last for the session only. To keep one, put the{' '}
-        <code>doskey</code> line in a startup script, the function in your{' '}
-        <code>$PROFILE</code>, or the alias in <code>~/.bashrc</code> or{' '}
-        <code>~/.zshrc</code>. Every command on this page then works with{' '}
-        <code>lamintra</code> in front instead of <code>java -jar</code>.
-      </p>
-    </section>
-
-    <section class="doc-block">
       <h2>1. Set the project up, once</h2>
       <div class="command">
         <code><span class="dim">$</span>&nbsp;{jarCommand('init')}</code>
@@ -178,7 +151,39 @@ const aliasSh = `alias lamintra='java -jar ~/tools/${jarFile}'`;
     </section>
 
     <section class="doc-block">
-      <h2>What "with zero manual fixes" actually means</h2>
+      <details class="fold">
+        <summary>Typing <code>lamintra</code> instead of <code>java -jar</code></summary>
+
+      <p>
+        Every command below is written as <code>java -jar {jarFile}</code>, which
+        assumes the jar is in the directory you are standing in. It does not have
+        to be: a full path works anywhere, and quoting it matters on Windows
+        because an unquoted path can be read as a redirect.
+      </p>
+      <div class="source"><Code code={`java -jar "C:\\tools\\${jarFile}" init`} lang="text" {...shiki} /></div>
+      <p>
+        There is no <code>lamintra</code> on your PATH, because the tool is a jar
+        rather than an installed binary. If you would rather type one, alias it
+        once. Pick your shell:
+      </p>
+      <div class="source"><Code code={aliasCmd} lang="text" {...shiki} /></div>
+      <div class="source"><Code code={aliasPwsh} lang="text" {...shiki} /></div>
+      <div class="source"><Code code={aliasSh} lang="text" {...shiki} /></div>
+      <p class="doc-note">
+        The first is <code>cmd</code>, the second PowerShell, the third bash or
+        zsh. All three last for the session only. To keep one, put the{' '}
+        <code>doskey</code> line in a startup script, the function in your{' '}
+        <code>$PROFILE</code>, or the alias in <code>~/.bashrc</code> or{' '}
+        <code>~/.zshrc</code>. Every command on this page then works with{' '}
+        <code>lamintra</code> in front instead of <code>java -jar</code>.
+      </p>
+      </details>
+    </section>
+
+    <section class="doc-block">
+      <details class="fold">
+        <summary>What "with zero manual fixes" actually means</summary>
+
       <p>
         This is the part that is not marketing. A copy-pasted <code>.tsx</code> file
         runs wherever you drop it. A copy-pasted <code>.kt</code> file{' '}
@@ -197,10 +202,13 @@ const aliasSh = `alias lamintra='java -jar ~/tools/${jarFile}'`;
         The rewrite is boundary-safe: rewriting <code>com.lamintra.button</code>{' '}
         never touches a package that merely shares its prefix.
       </p>
+      </details>
     </section>
 
     <section class="doc-block">
-      <h2>Where the code comes from</h2>
+      <details class="fold">
+        <summary>Where the code comes from</summary>
+
       <p>
         The CLI fetches from the public registry repository, pinned to the tag{' '}
         <code>{pinnedRegistry}</code> rather than to <code>main</code>. A push to
@@ -211,10 +219,13 @@ const aliasSh = `alias lamintra='java -jar ~/tools/${jarFile}'`;
         <a href="https://github.com/BalajiReddy1/lamintra-registry">The registry is public</a>,
         so you can read exactly what a command will write before you run it.
       </p>
+      </details>
     </section>
 
     <section class="doc-block">
-      <h2>Deleting Lamintra</h2>
+      <details class="fold">
+        <summary>Deleting Lamintra</summary>
+
       <p>
         Delete <code>{jarFile}</code> and the <code>.lamintra</code> directory.
         That is the whole uninstall. The components stay, because they were only
@@ -228,6 +239,7 @@ const aliasSh = `alias lamintra='java -jar ~/tools/${jarFile}'`;
         repository, it is yours to change, and a tool that rewrote your edits
         later would be taking that back.
       </p>
+      </details>
     </section>
   </article>
 </Base>
