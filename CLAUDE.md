@@ -19,6 +19,7 @@ stand, then `internal/CLAUDE.md` for the working rules. The rest:
 | `internal/CLAUDE.md` | Working rules, commands, and the traps that cost real time |
 | `internal/PRODUCT.md` | Strategy, audience, brand voice |
 | `internal/DESIGN.md` | The visual system and the measurements behind it |
+| `internal/TESTING.md` | How to test the product properly, and why each phase exists |
 | `internal/CHECKLIST.md` | Open engineering work, and the traps list |
 | `internal/LAUNCH.md` | Launch, search, analytics, off-site work |
 | `internal/DECISIONS.md` | Settled choices and the triggers that reopen them |
