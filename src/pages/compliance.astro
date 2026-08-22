@@ -58,9 +58,19 @@ import { lastUpdated, contactUrl } from '../data/legal';
         servers, which disclosed visitor IP addresses to Google before any
         interaction - an arrangement a German court has held to be processing
         personal data without a lawful basis. They are now served from this
-        domain. The analytics script is the only third-party request the site
-        makes, and it was picked so that this section did not have to be
-        rewritten backwards. See the <a href="/privacy/">privacy page</a>.
+        domain, and the analytics was picked so that this section did not have
+        to be rewritten backwards. See the <a href="/privacy/">privacy page</a>.
+      </p>
+      <p class="doc-note">
+        <b>Corrected 2026-08-21.</b> This paragraph used to end "the analytics
+        script is the only third-party request the site makes". That had stopped
+        being true: Cloudflare's Web Analytics beacon is injected at the hosting
+        layer, so it appeared on every page without any change to this site's
+        code. Two third-party requests, not one, and the{' '}
+        <a href="/privacy/">privacy page</a> now names both. It changes nothing
+        above - the beacon is cookieless and Cloudflare already serves this page
+        - but a page whose value is that its claims are checkable cannot carry
+        one that is not.
       </p>
       <p class="doc-note">
         <b>The other gap.</b> Article 13 requires a data controller to be

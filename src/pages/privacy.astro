@@ -71,11 +71,11 @@ import { lastUpdated, contactUrl } from '../data/legal';
     <section class="doc-block">
       <h2>Who else sees your visit</h2>
       <p>
-        Three parties, and naming them is the honest version of "we collect
-        nothing". <b>Exactly one third-party server is contacted when you load
-        a page here</b>, the analytics script described above. The typefaces are
-        served from this domain, and there is no CDN, no embed, no tag manager
-        and no advertising network.
+        Naming them is the honest version of "we collect nothing".
+        <b>Two third-party servers are contacted when you load a page here</b>:
+        the analytics script described above, and the host's performance beacon
+        described below. The typefaces are served from this domain, and there is
+        no CDN, no embed, no tag manager and no advertising network.
       </p>
       <p class="doc-note">
         Until 2026-08-11 the fonts loaded from Google's servers, which disclosed
@@ -99,6 +99,24 @@ import { lastUpdated, contactUrl } from '../data/legal';
         The site is static files served by a hosting provider, which keeps
         ordinary server logs including IP addresses, for delivery and abuse
         prevention. Every website has this; it is not specific to Lamintra.
+      </p>
+      <p>
+        That host is Cloudflare, and its <b>Web Analytics beacon</b> is injected
+        into each page automatically. It reports page-load timings - the Core
+        Web Vitals - so that this site's speed can be measured with real
+        visits rather than guessed at. It sets no cookie and stores nothing on
+        your device, and Cloudflare already receives your IP address as the
+        server delivering this page, so the beacon discloses it to nobody new.
+      </p>
+      <p class="doc-note">
+        <b>Added to this page on 2026-08-21, after the beacon was found running
+        and undeclared.</b> It had been enabled at the hosting layer rather than
+        added to the site's code, so it appeared without a change to this
+        repository, and both this page and the compliance page said for some
+        time that exactly one third-party server was contacted. That was wrong,
+        and it was found by opening the browser console on the live site rather
+        than by reading the source - which is the only place it could have been
+        found.
       </p>
 
       <h3>GitHub</h3>
