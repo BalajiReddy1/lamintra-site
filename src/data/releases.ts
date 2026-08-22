@@ -10,8 +10,8 @@
  *   git for-each-ref --sort=-creatordate \
  *     --format='%(refname:short)|%(creatordate:short)|%(contents:subject)' refs/tags
  */
-export const currentCli = 'v0.9.0';
-export const pinnedRegistry = 'v0.8.0';
+export const currentCli = 'v0.10.0';
+export const pinnedRegistry = 'v0.9.0';
 
 /**
  * The downloaded file's real name, which is NOT `lamintra.jar`.
