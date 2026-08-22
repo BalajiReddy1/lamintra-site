@@ -88,7 +88,6 @@ existing install gets.
 
 - [Install](${site}/install/): the two commands, plus the optional iOS shell scaffold
 - [Components](${site}/components/): all ${components.length}, with props parsed from the real Kotlin
-- [Changelog](${site}/changelog/): releases, and what has been retired and why
 
 ## Components
 

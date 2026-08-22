@@ -38,7 +38,6 @@ const sorted = [...components].sort((a, b) => a.slug.localeCompare(b.slug));
         <li><a href="/">The home page</a></li>
         <li><a href="/components/">All {components.length} components</a></li>
         <li><a href="/install/">Install</a>, which is the two commands</li>
-        <li><a href="/changelog/">Changelog</a>, including what has been retired</li>
       </ul>
     </section>
 
@@ -53,11 +52,6 @@ const sorted = [...components].sort((a, b) => a.slug.localeCompare(b.slug));
           <li><a href={`/components/${c.slug}/`}><code>{c.slug}</code></a> - {c.name}</li>
         ))}
       </ul>
-      <p class="doc-note">
-        Retired components keep their entry in the{' '}
-        <a href="/changelog/">changelog</a> rather than disappearing, so a slug
-        that used to exist is still explained somewhere.
-      </p>
     </section>
   </article>
 </Base>

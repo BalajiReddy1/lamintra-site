@@ -64,7 +64,6 @@ const ogImage = Astro.site
 const nav = [
   { href: '/components/', label: 'Components' },
   { href: '/install/', label: 'Install' },
-  { href: '/changelog/', label: 'Changelog' },
 ];
 ---
 <!doctype html>
@@ -191,11 +190,12 @@ const nav = [
       ))}
       <a href="https://github.com/BalajiReddy1/lamintra" data-optional-narrow>GitHub</a>
     </nav>
-    {/* The version, in the chrome rather than buried on the changelog. A
-        library with no visible version reads as unmaintained, which is the one
-        objection this category actually has. Derived from `currentCli`, so it
-        cannot drift from the jar the install page links to. */}
-    <a class="version" href="/changelog/">{currentCli}</a>
+    {/* The version, in the chrome. A library with no visible version reads as
+        unmaintained, which is the one objection this category actually has.
+        Derived from `currentCli`, so it cannot drift from the jar the install
+        page links to. Points at GitHub Releases: release history is a
+        repository concern and lives with the code, not on the marketing site. */}
+    <a class="version" href="https://github.com/BalajiReddy1/lamintra/releases">{currentCli}</a>
     <div class="scheme" role="group" aria-label="Colour scheme">
       {/* Icons, not the words "Dark" and "Light", since 2026-08-17. Two
           reasons. The label was redundant - the control is a two-state track

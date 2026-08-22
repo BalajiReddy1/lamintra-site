@@ -10,48 +10,6 @@
  *   git for-each-ref --sort=-creatordate \
  *     --format='%(refname:short)|%(creatordate:short)|%(contents:subject)' refs/tags
  */
-export interface Release {
-  version: string;
-  date: string;
-  summary: string;
-}
-
-export const cliReleases: Release[] = [
-  // The tag subject is "v0.6.0: ios-shell scaffold, registry v0.5.3". The
-  // leading version is dropped here and ONLY here, because the page already
-  // renders the version in its own column and would otherwise read
-  // "v0.6.0 - v0.6.0: ...". Noted rather than done quietly: the rule above is
-  // that summaries are verbatim, and the next tag should just not repeat its
-  // own version in the subject.
-  // Trimmed the same way v0.6.0 below is, and for the same reason: the tag
-  // subject was "Pin to registry v0.8.0 and cut 0.9.0", and the page already
-  // renders the version in its own column, so the trailing clause would have
-  // read "v0.9.0 - ... and cut 0.9.0". The rule above still stands and the next
-  // tag should simply not name its own version.
-  { version: 'v0.9.0', date: '2026-08-19', summary: 'Pin to registry v0.8.0' },
-  { version: 'v0.8.0', date: '2026-08-16', summary: 'swipe-row, registry v0.7.0' },
-  { version: 'v0.7.0', date: '2026-08-16', summary: 'sheet, registry v0.6.0' },
-  { version: 'v0.6.1', date: '2026-08-16', summary: 'registry v0.5.4, ios-shell without material3' },
-  { version: 'v0.6.0', date: '2026-08-16', summary: 'ios-shell scaffold, registry v0.5.3' },
-  { version: 'v0.5.0', date: '2026-08-06', summary: 'Wave 1: flat slugs, new base-tier language, retire the neon fixtures' },
-  { version: 'v0.4.0', date: '2026-08-06', summary: 'Ship the rename: registry v0.4.0, CLI v0.4.0' },
-  { version: 'v0.3.3', date: '2026-08-05', summary: 'Fix 11 token deviations; release CLI 0.3.3 against registry v0.3.2' },
-  { version: 'v0.3.2', date: '2026-08-01', summary: 'Window insets for bottom sheet; harden installer against path traversal' },
-  { version: 'v0.3.1', date: '2026-07-30', summary: 'Preview-on-install' },
-  { version: 'v0.3.0', date: '2026-07-20', summary: 'init auto-detection, and an add idempotency guard' },
-  { version: 'v0.2.1', date: '2026-07-20', summary: 'Fix bottom sheet drag-to-dismiss' },
-  { version: 'v0.2.0', date: '2026-07-12', summary: 'Add the button and neon-outline components' },
-  { version: 'v0.1.0', date: '2026-07-12', summary: 'Initial public release' },
-];
-
-/**
- * The registry the CLI is pinned to. Read out of `Registry.kt`, where
- * REGISTRY_BASE points at a release TAG rather than at `main`, so an install
- * cannot be changed under a user by a push to the registry.
- *
- * (It lived in `Installer.kt` until 2026-08-16, when the transport moved so
- * that `add` and `scaffold` could share it.)
- */
 export const currentCli = 'v0.9.0';
 export const pinnedRegistry = 'v0.8.0';
 
