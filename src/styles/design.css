@@ -1084,7 +1084,15 @@ hr { height: 1px; border: 0; background: var(--line); margin: 0; }
   font-size: var(--step--1);
   color: var(--ink-faint);
 }
-.crumbs a { color: var(--ink-muted); text-decoration: none; }
+/* inline-flex with a floor, so the only non-inline link on the site that fell
+   under the 24px target-size minimum (it measured 75 by 22) clears it. */
+.crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--ink-muted);
+  text-decoration: none;
+}
 .crumbs a:hover { color: var(--ink); text-decoration: underline; }
 
 .doc-head { margin-block-end: var(--space-2xl); }
