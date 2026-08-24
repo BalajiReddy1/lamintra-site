@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { lastUpdated, contactUrl } from '../data/legal';
+import { lastUpdated, contactUrl, contactEmail } from '../data/legal';
 ---
 <Base
   title="Privacy - Lamintra"
@@ -160,8 +160,10 @@ import { lastUpdated, contactUrl } from '../data/legal';
       </p>
       <p>
         If you believe that is wrong, or something on this page has stopped
-        being true, <a href={contactUrl}>open an issue</a> and it will be
-        corrected.
+        being true, email <a href={`mailto:${contactEmail}`}>{contactEmail}</a>{' '}
+        - a data question is not always something you want to post publicly -
+        or <a href={contactUrl}>open an issue</a> if you'd rather. Either way
+        it gets corrected.
       </p>
     </section>
   </article>

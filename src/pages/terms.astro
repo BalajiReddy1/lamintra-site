@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { lastUpdated, contactUrl, licenceUrl } from '../data/legal';
+import { lastUpdated, contactUrl, contactEmail, licenceUrl } from '../data/legal';
 ---
 <Base
   title="Terms - Lamintra"
@@ -103,8 +103,9 @@ import { lastUpdated, contactUrl, licenceUrl } from '../data/legal';
         history rather than announced here.
       </p>
       <p>
-        Questions go to <a href={contactUrl}>the issue tracker</a>, which is a
-        public channel and the only one.
+        Questions go to <a href={`mailto:${contactEmail}`}>{contactEmail}</a>{' '}
+        or <a href={contactUrl}>the issue tracker</a>, which is public and
+        stays open to anyone who prefers it.
       </p>
     </section>
   </article>
