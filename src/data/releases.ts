@@ -14,23 +14,34 @@ export const currentCli = 'v0.10.0';
 export const pinnedRegistry = 'v0.9.0';
 
 /**
- * The downloaded file's real name, which is NOT `lamintra.jar`.
+ * The downloaded file's name, and it is deliberately unversioned.
  *
- * `archiveVersion` in cli-kotlin/build.gradle.kts puts the version in the
- * filename, and release.yml uploads that file as-is, so what a visitor gets
- * from the release page is `lamintra-0.8.0.jar`. The site said
- * `java -jar lamintra.jar` in six hand-written places, so the first command
- * every new user copied failed with "Unable to access jarfile". The founder
- * hit it on the first real install test on 2026-08-11.
+ * This line has now been wrong in both directions, so both are recorded.
  *
- * Derived here rather than typed anywhere, for the same reason the component
- * counts are: six copies of a string that changes every release is six chances
- * to ship a broken primary CTA, and it was already wrong in all six.
+ * Until 2026-08-11 the site said `lamintra.jar` in six hand-written places
+ * while the release served `lamintra-0.8.0.jar`, because `archiveVersion` in
+ * cli-kotlin/build.gradle.kts puts the version in the built filename and
+ * release.yml uploaded that file as-is. So the first command every new user
+ * copied failed with "Unable to access jarfile". The founder hit it on the
+ * first real install test.
  *
- * If the jar is ever renamed on the release side, this is the only line to
- * change.
+ * The fix was to derive the versioned name here. That closed the mismatch and
+ * left a worse one: the version was baked into every command anyone wrote
+ * down. A demo video, a forum post, a team's onboarding doc - all of them
+ * break the day the next tag ships, and none of them can be regenerated from
+ * this file the way these pages can.
+ *
+ * So release.yml uploads the same jar under two names as of 2026-08-25.
+ * `lamintra-<version>.jar` still exists, still carries the tag assertion, and
+ * is what anyone pinning a version should use. `lamintra.jar` is what the
+ * site hands out. The unversioned name is also the only thing that makes
+ * `releases/latest/download/lamintra.jar` resolve, because that URL matches
+ * on asset name and a versioned one can never be "latest".
+ *
+ * Still derived rather than typed in each page, for the same reason the
+ * component counts are.
  */
-export const jarFile = `lamintra-${currentCli.replace(/^v/, '')}.jar`;
+export const jarFile = 'lamintra.jar';
 
 /** The full command, so callers never concatenate `java -jar` themselves. */
 export const jarCommand = (args: string) => `java -jar ${jarFile} ${args}`;

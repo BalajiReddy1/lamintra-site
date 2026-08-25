@@ -46,8 +46,15 @@ const version = must(
   releases.match(/export const currentCli = '([^']+)'/)?.[1],
   'currentCli from src/data/releases.ts'
 );
-// Mirrors `jarFile` in releases.ts. If that derivation changes, change it here.
-const jarFile = `lamintra-${version.replace(/^v/, '')}.jar`;
+// Parsed out of releases.ts rather than re-derived here. It used to mirror the
+// derivation with a comment asking the next person to keep both in step, and
+// this card is the one thing on the site that bakes a value into a picture, so
+// it cannot be corrected by a rebuild the way every page can. One source means
+// there is nothing left to keep in step.
+const jarFile = must(
+  releases.match(/export const jarFile = '([^']+)'/)?.[1],
+  'jarFile from src/data/releases.ts'
+);
 const command = `java -jar ${jarFile} add button`;
 
 // The count the SITE claims, which is components[].length, not installableCount.
