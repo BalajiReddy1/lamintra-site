@@ -11,7 +11,8 @@
     "check:spacing": "node scripts/check-spacing.mjs",
     "check:links": "node scripts/check-links.mjs",
     "og-card": "node scripts/og-card.mjs",
-    "optimise:images": "python scripts/optimise-images.py --write"
+    "optimise:images": "python scripts/optimise-images.py --write",
+    "favicon": "node scripts/favicon.mjs"
   },
   "devDependencies": {
     "astro": "^7.2.0"

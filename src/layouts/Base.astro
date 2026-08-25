@@ -104,8 +104,23 @@ const nav = [
     generic bar-across-a-box, this one is the same L cut from the product's
     own squircle geometry. A chip rather than a bare glyph, because a
     favicon with no background loses contrast against whatever colour the
-    browser's own tab strip happens to be. */}
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M 8.00 0.00 L 24.00 0.00 L 24.00 0.00 L 27.67 0.07 L 29.06 0.30 L 30.05 0.67 L 30.78 1.22 L 31.33 1.95 L 31.70 2.94 L 31.93 4.33 L 32.00 8.00 L 32.00 24.00 L 32.00 24.00 L 31.93 27.67 L 31.70 29.06 L 31.33 30.05 L 30.78 30.78 L 30.05 31.33 L 29.06 31.70 L 27.67 31.93 L 24.00 32.00 L 8.00 32.00 L 8.00 32.00 L 4.33 31.93 L 2.94 31.70 L 1.95 31.33 L 1.22 30.78 L 0.67 30.05 L 0.30 29.06 L 0.07 27.67 L 0.00 24.00 L 0.00 8.00 L 0.00 8.00 L 0.07 4.33 L 0.30 2.94 L 0.67 1.95 L 1.22 1.22 L 1.95 0.67 L 2.94 0.30 L 4.33 0.07 L 8.00 0.00 Z' fill='%230a0a0b'/><g transform='translate(5,5)'><mask id='fm'><rect width='22' height='22' fill='white'/><path d='M 11.40 0.00 L 19.60 0.00 L 19.60 0.00 L 20.70 0.02 L 21.12 0.09 L 21.41 0.20 L 21.63 0.37 L 21.80 0.59 L 21.91 0.88 L 21.98 1.30 L 22.00 2.40 L 22.00 10.60 L 22.00 10.60 L 21.98 11.70 L 21.91 12.12 L 21.80 12.41 L 21.63 12.63 L 21.41 12.80 L 21.12 12.91 L 20.70 12.98 L 19.60 13.00 L 11.40 13.00 L 11.40 13.00 L 10.30 12.98 L 9.88 12.91 L 9.59 12.80 L 9.37 12.63 L 9.20 12.41 L 9.09 12.12 L 9.02 11.70 L 9.00 10.60 L 9.00 2.40 L 9.00 2.40 L 9.02 1.30 L 9.09 0.88 L 9.20 0.59 L 9.37 0.37 L 9.59 0.20 L 9.88 0.09 L 10.30 0.02 L 11.40 0.00 Z' fill='black'/></mask><path d='M 4.30 0.00 L 17.70 0.00 L 17.70 0.00 L 19.67 0.04 L 20.42 0.16 L 20.95 0.36 L 21.35 0.65 L 21.64 1.05 L 21.84 1.58 L 21.96 2.33 L 22.00 4.30 L 22.00 17.70 L 22.00 17.70 L 21.96 19.67 L 21.84 20.42 L 21.64 20.95 L 21.35 21.35 L 20.95 21.64 L 20.42 21.84 L 19.67 21.96 L 17.70 22.00 L 4.30 22.00 L 4.30 22.00 L 2.33 21.96 L 1.58 21.84 L 1.05 21.64 L 0.65 21.35 L 0.36 20.95 L 0.16 20.42 L 0.04 19.67 L 0.00 17.70 L 0.00 4.30 L 0.00 4.30 L 0.04 2.33 L 0.16 1.58 L 0.36 1.05 L 0.65 0.65 L 1.05 0.36 L 1.58 0.16 L 2.33 0.04 L 4.30 0.00 Z' fill='%23fafafa' mask='url(%23fm)'/></g></svg>">
+    browser's own tab strip happens to be.
+
+    These are FILES, and inlining them back into a data: URI would be a
+    regression however much it saves a request. Google's requirement is
+    "Googlebot-Image must be able to crawl the favicon file", and a data URI
+    is not a file - there is no URL to fetch. This site was indexed for weeks
+    showing the default globe in search results for exactly that reason, and
+    it audited as DONE the whole time, because the check asked whether a
+    favicon existed rather than whether Google could reach it.
+
+    The SVG is the artwork. favicon.ico is generated from it by
+    `npm run favicon` and exists for the fallback path a browser requests on
+    its own. Google recrawls favicons on its own schedule, several days to
+    several weeks, so this is not a change that can be verified the same
+    afternoon. */}
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 {schema && (
