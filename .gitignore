@@ -47,3 +47,7 @@ legacy/
 # Dev server definitions, which hard-code this machine's absolute paths and
 # therefore work nowhere else while publishing the local directory layout.
 .claude/launch.json
+
+# Wrangler caches the Cloudflare account id and name here. Machine-local,
+# and this is a public repo. Deploys run from this directory.
+.wrangler/
